@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, EmptyState, ErrorState, Input, Loader } from '@/components/ui';
+import { api, config, normalizeError } from '@/services';
 import { colors, spacing, typography } from '@/theme';
 
 export function PlaceholderScreen() {
@@ -9,12 +10,29 @@ export function PlaceholderScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [testingApi, setTestingApi] = useState(false);
+  const [apiResult, setApiResult] = useState('Nenhum teste executado.');
 
-  const emailError = email.length > 0 && !email.includes('@') ? 'Informe um e-mail válido.' : undefined;
+  const emailError =
+    email.length > 0 && !email.includes('@') ? 'Informe um e-mail válido.' : undefined;
 
   function simulateLoading() {
     setLoading(true);
     setTimeout(() => setLoading(false), 2000);
+  }
+
+  async function testApi() {
+    setTestingApi(true);
+    try {
+      const response = await api.get('/health');
+      setApiResult(`Sucesso (HTTP ${response.status}).`);
+    } catch (error) {
+      const apiError = normalizeError(error);
+      const status = apiError.status ? ` ${apiError.status}` : '';
+      setApiResult(`Erro [${apiError.kind}${status}]: ${apiError.message}`);
+    } finally {
+      setTestingApi(false);
+    }
   }
 
   return (
@@ -28,6 +46,13 @@ export function PlaceholderScreen() {
     >
       <Text style={styles.title}>AgroConnect</Text>
       <Text style={styles.subtitle}>Vitrine de componentes (provisória)</Text>
+
+      <Card style={styles.section}>
+        <Text style={styles.sectionTitle}>Cliente HTTP</Text>
+        <Text style={styles.body}>URL base: {config.apiUrl}</Text>
+        <Button title="Testar API (GET /health)" onPress={testApi} loading={testingApi} />
+        <Text style={styles.body}>{apiResult}</Text>
+      </Card>
 
       <Card style={styles.section}>
         <Text style={styles.sectionTitle}>Botões</Text>
@@ -94,5 +119,6 @@ const styles = StyleSheet.create({
   subtitle: { ...typography.body, color: colors.text },
   section: { gap: spacing.sm },
   sectionTitle: { ...typography.subheading, color: colors.text },
+  body: { ...typography.caption, color: colors.textMuted },
   footer: { height: spacing.lg },
 });

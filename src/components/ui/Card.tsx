@@ -1,5 +1,4 @@
 import { StyleSheet, View, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
-
 import { colors, radius, spacing } from '@/theme';
 
 type CardProps = ViewProps & {

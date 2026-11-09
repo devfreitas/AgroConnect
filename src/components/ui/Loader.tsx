@@ -1,5 +1,4 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-
 import { colors, spacing, typography } from '@/theme';
 
 type LoaderProps = {

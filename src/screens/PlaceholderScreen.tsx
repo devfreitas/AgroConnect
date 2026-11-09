@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, EmptyState, ErrorState, Input, Loader } from '@/components/ui';
-import { api, config, normalizeError } from '@/services';
+import {  DEMO_CREDENTIALS,  aiApi,  api,  config,  normalizeError,  setAuthTokenGetter } from '@/services';
 import { colors, spacing, typography } from '@/theme';
+import type { Page } from '@/types/api';
+import type {  AuthResponse,  Device,  LatestReadings,  Property,  Recommendation } from '@/types/domain';
 
 export function PlaceholderScreen() {
   const insets = useSafeAreaInsets();
@@ -21,15 +23,58 @@ export function PlaceholderScreen() {
     setTimeout(() => setLoading(false), 2000);
   }
 
-  async function testApi() {
+  async function testFlow() {
     setTestingApi(true);
     try {
-      const response = await api.get('/health');
-      setApiResult(`Sucesso (HTTP ${response.status}).`);
+      const login = await api.post<AuthResponse>('/auth/login', DEMO_CREDENTIALS, {
+        skipAuth: true,
+      });
+      const token = login.data.accessToken;
+      setAuthTokenGetter(() => token);
+
+      const properties = await api.get<Page<Property>>('/properties');
+      const devices = await api.get<Page<Device>>('/devices');
+      const device = devices.data.items[0];
+
+      if (!device) {
+        setApiResult(`Login ok. Propriedades: ${properties.data.items.length}. Sem dispositivos.`);
+        return;
+      }
+
+      const latest = await api.get<LatestReadings>(`/devices/${device.id}/readings/latest`);
+      const soil = latest.data.readings.find((reading) => reading.type === 'SOIL_MOISTURE');
+      const recommendations = await aiApi.post<Page<Recommendation>>('/recommendations', {
+        deviceId: device.id,
+      });
+
+      setApiResult(
+        [
+          `Login ok: ${login.data.user.name}`,
+          `Propriedades: ${properties.data.items.length}`,
+          `Dispositivos: ${devices.data.items.length} (${device.code}: ${device.status})`,
+          `Umidade do solo: ${soil?.value ?? '—'}${soil?.unit ?? ''} [${soil?.quality ?? '—'}]`,
+          `IA: ${recommendations.data.items[0]?.title ?? 'sem recomendação'}`,
+        ].join('\n'),
+      );
     } catch (error) {
       const apiError = normalizeError(error);
       const status = apiError.status ? ` ${apiError.status}` : '';
       setApiResult(`Erro [${apiError.kind}${status}]: ${apiError.message}`);
+    } finally {
+      setTestingApi(false);
+    }
+  }
+
+  async function testWithoutToken() {
+    setTestingApi(true);
+    setAuthTokenGetter(() => null);
+    try {
+      await api.get('/properties');
+      setApiResult('Inesperado: a chamada sem token foi aceita.');
+    } catch (error) {
+      const apiError = normalizeError(error);
+      const status = apiError.status ? ` ${apiError.status}` : '';
+      setApiResult(`Sem token → [${apiError.kind}${status}] ${apiError.message}`);
     } finally {
       setTestingApi(false);
     }
@@ -49,8 +94,17 @@ export function PlaceholderScreen() {
 
       <Card style={styles.section}>
         <Text style={styles.sectionTitle}>Cliente HTTP</Text>
+        <Text style={styles.body}>
+          Modo: {config.useMock ? 'MOCK (dados simulados)' : 'API real'}
+        </Text>
         <Text style={styles.body}>URL base: {config.apiUrl}</Text>
-        <Button title="Testar API (GET /health)" onPress={testApi} loading={testingApi} />
+        <Button title="Testar fluxo completo" onPress={testFlow} loading={testingApi} />
+        <Button
+          title="Testar chamada sem token"
+          onPress={testWithoutToken}
+          variant="outline"
+          disabled={testingApi}
+        />
         <Text style={styles.body}>{apiResult}</Text>
       </Card>
 

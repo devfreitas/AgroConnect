@@ -6,8 +6,6 @@ export const config = {
   apiUrl: process.env.EXPO_PUBLIC_API_URL ?? DEFAULT_API_URL,
   /** API de IA: recomendações. */
   aiApiUrl: process.env.EXPO_PUBLIC_AI_API_URL ?? DEFAULT_AI_API_URL,
-  /** Usa dados simulados locais em vez das APIs. */
-  useMock: process.env.EXPO_PUBLIC_USE_MOCK === 'true',
-  /** Tempo máximo de espera. Alto de propósito: o Render hiberna e a primeira chamada demora. */
+  /** Tempo máximo de espera. Alto de propósito: o Render gratuito hiberna e a primeira chamada demora. */
   requestTimeoutMs: 60_000,
 } as const;

@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { PlaceholderScreen } from '@/screens/PlaceholderScreen';
 import type { AppStackParamList } from '@/types/navigation';
 

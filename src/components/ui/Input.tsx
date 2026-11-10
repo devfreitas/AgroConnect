@@ -1,5 +1,13 @@
 import { forwardRef, useState, type ComponentRef } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  type TextInputProps,
+} from 'react-native';
+
 import { colors, radius, spacing, typography } from '@/theme';
 
 type InputRef = ComponentRef<typeof TextInput>;
@@ -17,6 +25,7 @@ export const Input = forwardRef<InputRef, InputProps>(function Input(
   const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(true);
   const isPassword = Boolean(secureTextEntry);
+
   const borderColor = error ? colors.error : focused ? colors.primary : colors.border;
 
   return (

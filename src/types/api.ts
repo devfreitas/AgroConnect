@@ -1,4 +1,4 @@
-/** Corpo de erro da API. */
+/** Corpo de erro padronizado da API (conforme o briefing). */
 export type ApiErrorBody = {
   code?: string;
   message?: string;
@@ -6,7 +6,7 @@ export type ApiErrorBody = {
   timestamp?: string;
 };
 
-/** Resposta paginada. */
+/** Resposta paginada. Formato de `page` é proposta, validar com o backend. */
 export type Page<T> = {
   items: T[];
   page: {

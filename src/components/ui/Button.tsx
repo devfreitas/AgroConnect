@@ -1,4 +1,5 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, type ViewStyle } from 'react-native';
+
 import { colors, radius, spacing, typography } from '@/theme';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger';

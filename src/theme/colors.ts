@@ -1,18 +1,18 @@
 export const colors = {
-  // Paleta de cores inspirada em tons terrosos e naturais.
+  // Paleta da marca (informada pela equipe)
   primary: '#C46B38', // Terracota: cor principal e botões
   accent: '#D9B77E', // Dourado areia: destaques e detalhes
   background: '#EAD9C1', // Bege claro: fundos
   text: '#382719', // Marrom café: textos e títulos
   secondary: '#A18D72', // Taupe: elementos secundários
 
-  // Complementares
+  // Complementares (proposta, validar com a equipe)
   surface: '#FFFBF5', // Off-white: cartões e superfícies sobre o fundo
   primaryContrast: '#FFFFFF', // Texto sobre a cor principal
   border: '#D6C3A5', // Divisórias e contornos
   textMuted: '#6B5844', // Texto secundário legível sobre o fundo
 
-  // Estados (sempre combinar com texto e ícone)
+  // Estados (sempre combinar com texto e ícone, nunca só a cor)
   success: '#4F7A3A',
   warning: '#B7791F',
   error: '#B3261E',

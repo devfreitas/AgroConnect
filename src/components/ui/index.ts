@@ -4,3 +4,4 @@ export { EmptyState } from './EmptyState';
 export { ErrorState } from './ErrorState';
 export { Input } from './Input';
 export { Loader } from './Loader';
+export { TextLink } from './TextLink';

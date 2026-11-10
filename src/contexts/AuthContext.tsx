@@ -1,5 +1,24 @@
-import {  createContext,  useCallback,  useEffect,  useMemo,  useRef,  useState,  type ReactNode } from 'react';
-import {  fetchCurrentUser,  loginRequest,  logoutRequest,  normalizeError,  registerRequest,  setAuthTokenGetter,  setUnauthorizedHandler,  type LoginPayload,  type RegisterPayload } from '@/services';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+
+import {
+  fetchCurrentUser,
+  loginRequest,
+  logoutRequest,
+  normalizeError,
+  registerRequest,
+  setAuthTokenGetter,
+  setUnauthorizedHandler,
+  type LoginPayload,
+  type RegisterPayload,
+} from '@/services';
 import { clearSession, loadSession, saveSession } from '@/services/tokenStorage';
 import type { User } from '@/types/domain';
 

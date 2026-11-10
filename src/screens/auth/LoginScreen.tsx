@@ -1,53 +1,45 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Controller, useForm } from 'react-hook-form';
+import { StyleSheet, Text } from 'react-native';
 
-import { Button, Card, Input } from '@/components/ui';
+import { AuthLayout } from '@/components/shared/AuthLayout';
+import { Button, Card, Input, TextLink } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
-import { getErrorMessage } from '@/services';
 import { colors, spacing, typography } from '@/theme';
+import type { AuthStackScreenProps } from '@/types/navigation';
+import { applyServerErrors } from '@/utils/formErrors';
 
-export function LoginScreen() {
-  const insets = useSafeAreaInsets();
+import { loginSchema, type LoginFormValues } from './schemas';
+
+export function LoginScreen({ navigation }: AuthStackScreenProps<'Login'>) {
   const { signIn, sessionMessage, clearSessionMessage } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
-  async function handleSubmit() {
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+    mode: 'onTouched',
+  });
+
+  const onSubmit = handleSubmit(async (values) => {
     clearSessionMessage();
-
-    if (!email.trim() || !password) {
-      setError('Informe e-mail e senha.');
-      return;
-    }
-
-    setError(null);
-    setLoading(true);
+    setFormError(null);
 
     try {
-      await signIn({ email: email.trim(), password });
-    } catch (submitError) {
-      setError(getErrorMessage(submitError));
-      setLoading(false);
+      await signIn(values);
+    } catch (error) {
+      setFormError(applyServerErrors(error, setError, ['email', 'password']));
     }
-  }
+  });
 
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={[
-        styles.content,
-        { paddingTop: insets.top + spacing.xl, paddingBottom: insets.bottom + spacing.lg },
-      ]}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View style={styles.header}>
-        <Text style={styles.title}>AgroConnect</Text>
-        <Text style={styles.subtitle}>Entre para acompanhar a sua plantação.</Text>
-      </View>
-
+    <AuthLayout title="Entrar" subtitle="Acesse sua conta para acompanhar a plantação.">
       {sessionMessage ? (
         <Card accessibilityRole="alert">
           <Text style={styles.notice}>{sessionMessage}</Text>
@@ -55,44 +47,64 @@ export function LoginScreen() {
       ) : null}
 
       <Card style={styles.form}>
-        <Input
-          label="E-mail"
-          value={email}
-          onChangeText={setEmail}
-          placeholder="voce@exemplo.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoComplete="email"
-        />
-        <Input
-          label="Senha"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Sua senha"
-          secureTextEntry
-          autoCapitalize="none"
-          autoComplete="password"
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { value, onChange, onBlur } }) => (
+            <Input
+              label="E-mail"
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              error={errors.email?.message}
+              placeholder="voce@exemplo.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+            />
+          )}
         />
 
-        {error ? (
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { value, onChange, onBlur } }) => (
+            <Input
+              label="Senha"
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              error={errors.password?.message}
+              placeholder="Sua senha"
+              secureTextEntry
+              autoCapitalize="none"
+              autoComplete="password"
+              returnKeyType="go"
+              onSubmitEditing={() => void onSubmit()}
+            />
+          )}
+        />
+
+        {formError ? (
           <Text style={styles.error} accessibilityRole="alert">
-            {error}
+            {formError}
           </Text>
         ) : null}
 
-        <Button title="Entrar" onPress={handleSubmit} loading={loading} />
+        <Button title="Entrar" onPress={onSubmit} loading={isSubmitting} />
       </Card>
-    </ScrollView>
+
+      <TextLink
+        prefix="Não tem conta?"
+        label="Criar conta"
+        onPress={() => navigation.navigate('Register')}
+      />
+    </AuthLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { paddingHorizontal: spacing.md, gap: spacing.md },
-  header: { gap: spacing.xs, marginBottom: spacing.sm },
-  title: { ...typography.display, color: colors.primary },
-  subtitle: { ...typography.body, color: colors.text },
-  notice: { ...typography.bodyStrong, color: colors.text },
   form: { gap: spacing.md },
+  notice: { ...typography.bodyStrong, color: colors.text },
   error: { ...typography.caption, color: colors.error },
 });

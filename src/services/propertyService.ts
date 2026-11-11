@@ -22,6 +22,10 @@ export async function createProperty(input: PropertyInput): Promise<Property> {
   return data;
 }
 
+export async function deleteProperty(id: string): Promise<void> {
+  await api.delete(`/properties/${id}`);
+}
+
 export async function updateProperty(id: string, input: Partial<PropertyInput>): Promise<Property> {
   const { data } = await api.patch<Property>(`/properties/${id}`, input);
   return data;

@@ -10,4 +10,10 @@ export {
 } from './authService';
 export { setAuthTokenGetter, setUnauthorizedHandler } from './authBridge';
 export { config } from './config';
-export { createProperty, getProperty, listProperties, updateProperty } from './propertyService';
+export {
+  createProperty,
+  deleteProperty,
+  getProperty,
+  listProperties,
+  updateProperty,
+} from './propertyService';

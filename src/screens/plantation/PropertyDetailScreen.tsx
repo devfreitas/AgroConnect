@@ -1,11 +1,11 @@
-import { useCallback } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Alert, StyleSheet, Text } from 'react-native';
 
 import { Screen } from '@/components/shared/Screen';
 import { Button, Card, ErrorState, Loader, Notice } from '@/components/ui';
 import { useAutoDismiss } from '@/hooks/useAutoDismiss';
 import { useRemoteData } from '@/hooks/useRemoteData';
-import { getProperty } from '@/services';
+import { deleteProperty, getErrorMessage, getProperty } from '@/services';
 import { colors, spacing, typography } from '@/theme';
 import type { PlantationStackScreenProps } from '@/types/navigation';
 import { formatDate, formatHectares } from '@/utils/format';
@@ -20,8 +20,35 @@ export function PropertyDetailScreen({
     [propertyId],
   );
 
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   const dismissNotice = useCallback(() => navigation.setParams({ notice: undefined }), [navigation]);
   useAutoDismiss(notice, dismissNotice);
+
+  function confirmDelete() {
+    Alert.alert(
+      'Excluir propriedade',
+      `Deseja excluir "${data?.name ?? 'esta propriedade'}"? Essa ação não pode ser desfeita.`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', style: 'destructive', onPress: () => void runDelete() },
+      ],
+    );
+  }
+
+  async function runDelete() {
+    setDeleting(true);
+    setDeleteError(null);
+
+    try {
+      await deleteProperty(propertyId);
+      navigation.popTo('Plantation', { notice: 'Propriedade excluída com sucesso.' });
+    } catch (e) {
+      setDeleteError(getErrorMessage(e));
+      setDeleting(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -68,10 +95,19 @@ export function PropertyDetailScreen({
         <Text style={styles.value}>{formatDate(data.updatedAt)}</Text>
       </Card>
 
+      {deleteError ? <Notice type="error" message={deleteError} /> : null}
+
       <Button
         title="Editar propriedade"
         onPress={() => navigation.navigate('PropertyForm', { propertyId })}
         variant="outline"
+        disabled={deleting}
+      />
+      <Button
+        title="Excluir propriedade"
+        onPress={confirmDelete}
+        variant="danger"
+        loading={deleting}
       />
     </Screen>
   );

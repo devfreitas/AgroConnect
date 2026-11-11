@@ -128,6 +128,7 @@ Validação: `name`, `city` ≥ 2 caracteres; `state` com 2 letras; `areaHectare
 ```
 
 - `status` (`ONLINE`, `UNSTABLE`, `OFFLINE`, `UNKNOWN`) é **calculado pelo backend** a partir da última comunicação.
+- `GET /devices/{id}/sensors` retorna `Page<Sensor>` (`{ id, deviceId, type, label, unit }`), como as demais listas.
 - `readings/latest` → `{ deviceId, recordedAt, readings: [{ sensorId, type, value, unit, quality, recordedAt }], simulatedData }`.
 - `type`: `SOIL_MOISTURE`, `AIR_TEMPERATURE`, `AIR_HUMIDITY`, `LIGHT_ILLUMINANCE`.
 - `quality`: `VALID`, `OUT_OF_RANGE`, `SENSOR_ERROR`, `UNCALIBRATED`.

@@ -1,5 +1,5 @@
 import type { Page } from '@/types/api';
-import type { Device, LatestReadings } from '@/types/domain';
+import type { Device, LatestReadings, Sensor } from '@/types/domain';
 
 import { api } from './api';
 
@@ -21,4 +21,18 @@ export async function getLatestReadings(
     signal,
   });
   return data;
+}
+
+export async function getDevice(id: string, signal?: AbortSignal): Promise<Device> {
+  const { data } = await api.get<Device>(`/devices/${id}`, { signal });
+  return data;
+}
+
+/** Sensores do dispositivo (primeira página, até 100 itens). */
+export async function listSensors(deviceId: string, signal?: AbortSignal): Promise<Sensor[]> {
+  const { data } = await api.get<Page<Sensor>>(`/devices/${deviceId}/sensors`, {
+    params: { page: 1, size: 100 },
+    signal,
+  });
+  return data.items;
 }

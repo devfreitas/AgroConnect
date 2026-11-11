@@ -30,7 +30,11 @@ export type PlantationStackScreenProps<T extends keyof PlantationStackParamList>
 
 export type SensorsStackParamList = {
   Sensors: undefined;
+  DeviceDetail: { deviceId: string };
 };
+
+export type SensorsStackScreenProps<T extends keyof SensorsStackParamList> =
+  NativeStackScreenProps<SensorsStackParamList, T>;
 
 export type AnalyticsStackParamList = {
   Analytics: undefined;

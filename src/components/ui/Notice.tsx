@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { colors, radius, spacing, typography } from '@/theme';
 
-type NoticeType = 'success' | 'error';
+type NoticeType = 'success' | 'error' | 'info';
 
 type NoticeProps = {
   type: NoticeType;
@@ -13,6 +13,7 @@ type NoticeProps = {
 const config = {
   success: { icon: 'checkmark-circle', color: colors.success },
   error: { icon: 'alert-circle', color: colors.error },
+  info: { icon: 'information-circle', color: colors.info },
 } as const;
 
 /** Aviso de sucesso ou erro. Combina ícone, cor e texto (a cor nunca é o único indicador). */

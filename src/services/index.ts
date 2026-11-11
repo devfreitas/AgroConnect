@@ -10,6 +10,7 @@ export {
 } from './authService';
 export { setAuthTokenGetter, setUnauthorizedHandler } from './authBridge';
 export { config } from './config';
+export { getLatestReadings, listDevices } from './deviceService';
 export {
   createProperty,
   deleteProperty,

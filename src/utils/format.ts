@@ -9,6 +9,15 @@ export function formatDate(iso: string): string {
   return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString('pt-BR');
 }
 
+/** Data e hora no padrão brasileiro (ex.: "10/11/2026 14:30"). Retorna "—" se for inválida. */
+export function formatDateTime(iso: string | Date): string {
+  const date = typeof iso === 'string' ? new Date(iso) : iso;
+  if (Number.isNaN(date.getTime())) return '—';
+  const day = date.toLocaleDateString('pt-BR');
+  const time = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return `${day} ${time}`;
+}
+
 /** Lê um número digitado com vírgula ou ponto decimal (ex.: "3,5"). Retorna null se for inválido. */
 export function parseHectares(text: string): number | null {
   const normalized = text.trim().replace(',', '.');

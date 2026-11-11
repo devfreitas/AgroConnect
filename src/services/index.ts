@@ -11,6 +11,7 @@ export {
 export { setAuthTokenGetter, setUnauthorizedHandler } from './authBridge';
 export { config } from './config';
 export { getDevice, getLatestReadings, listDevices, listSensors } from './deviceService';
+export { getHistory, type HistoryQuery } from './historyService';
 export {
   createProperty,
   deleteProperty,

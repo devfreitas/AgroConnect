@@ -7,7 +7,7 @@ Aplicativo mobile do AgroConnect, plataforma de apoio a pequenos produtores rura
 ## Stack
 
 - React Native, TypeScript e Expo (SDK 58)
-- React Navigation (native stack; abas entram nos próximos commits)
+- React Navigation (native stack e bottom tabs, com 5 abas)
 - Axios (clientes para a API C# e para a API de IA)
 - React Hook Form e Zod (formulários)
 - Expo SecureStore (token e sessão)
@@ -32,7 +32,7 @@ src/
 ├── contexts/      AuthContext
 ├── hooks/         useAuth
 ├── navigation/    RootNavigator, AuthNavigator, AppNavigator
-├── screens/       telas (auth/ ...)
+├── screens/       telas (auth, home, plantation, sensors, analytics, profile)
 ├── services/      Axios, erros, autenticação, armazenamento seguro
 ├── theme/         cores, tipografia, espaçamento
 ├── types/         contratos e tipos

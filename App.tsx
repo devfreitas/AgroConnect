@@ -4,12 +4,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider } from '@/contexts/AuthContext';
 import { RootNavigator } from '@/navigation/RootNavigator';
+import { navigationTheme } from '@/theme/navigationTheme';
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <NavigationContainer>
+        <NavigationContainer theme={navigationTheme}>
           <StatusBar style="dark" />
           <RootNavigator />
         </NavigationContainer>

@@ -25,6 +25,7 @@ export const Input = forwardRef<InputRef, InputProps>(function Input(
   const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(true);
   const isPassword = Boolean(secureTextEntry);
+  const multiline = Boolean(rest.multiline);
 
   const borderColor = error ? colors.error : focused ? colors.primary : colors.border;
 
@@ -32,10 +33,10 @@ export const Input = forwardRef<InputRef, InputProps>(function Input(
     <View style={styles.wrapper}>
       <Text style={styles.label}>{label}</Text>
 
-      <View style={[styles.field, { borderColor }]}>
+      <View style={[styles.field, multiline && styles.fieldMultiline, { borderColor }]}>
         <TextInput
           ref={ref}
-          style={styles.input}
+          style={[styles.input, multiline && styles.inputMultiline]}
           placeholderTextColor={colors.textMuted}
           secureTextEntry={isPassword && hidden}
           accessibilityLabel={label}
@@ -86,12 +87,14 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     backgroundColor: colors.surface,
   },
+  fieldMultiline: { alignItems: 'flex-start', minHeight: 96 },
   input: {
     flex: 1,
     paddingVertical: spacing.sm,
     ...typography.body,
     color: colors.text,
   },
+  inputMultiline: { minHeight: 96, textAlignVertical: 'top' },
   toggle: { paddingLeft: spacing.sm, minHeight: 44, justifyContent: 'center' },
   toggleText: { ...typography.label, color: colors.primary },
   error: { ...typography.caption, color: colors.error },

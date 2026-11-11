@@ -18,8 +18,15 @@ export type HomeStackParamList = {
 };
 
 export type PlantationStackParamList = {
-  Plantation: undefined;
+  /** `notice`: mensagem de sucesso exibida ao voltar de um formulário. */
+  Plantation: { notice?: string } | undefined;
+  PropertyDetail: { propertyId: string; notice?: string };
+  /** Sem `propertyId`: cadastro de nova propriedade. Com `propertyId`: edição. */
+  PropertyForm: { propertyId?: string } | undefined;
 };
+
+export type PlantationStackScreenProps<T extends keyof PlantationStackParamList> =
+  NativeStackScreenProps<PlantationStackParamList, T>;
 
 export type SensorsStackParamList = {
   Sensors: undefined;

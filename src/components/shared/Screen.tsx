@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, spacing, typography } from '@/theme';
@@ -8,17 +8,40 @@ type ScreenProps = {
   title: string;
   subtitle?: string;
   children?: ReactNode;
+  /** Soma a área segura superior. Use false quando a tela tem cabeçalho nativo. */
+  safeTop?: boolean;
+  /** Ativa o "puxar para atualizar". */
+  onRefresh?: () => void;
+  refreshing?: boolean;
 };
 
-/** Estrutura comum das telas das abas: área segura, título e rolagem. */
-export function Screen({ title, subtitle, children }: ScreenProps) {
+/** Estrutura comum das telas: área segura, título e rolagem. */
+export function Screen({
+  title,
+  subtitle,
+  children,
+  safeTop = true,
+  onRefresh,
+  refreshing = false,
+}: ScreenProps) {
   const insets = useSafeAreaInsets();
+  const paddingTop = (safeTop ? insets.top : 0) + spacing.lg;
 
   return (
     <ScrollView
       style={styles.screen}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
+      contentContainerStyle={[styles.content, { paddingTop }]}
       keyboardShouldPersistTaps="handled"
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+          />
+        ) : undefined
+      }
     >
       <View style={styles.header}>
         <Text style={styles.title} accessibilityRole="header">

@@ -38,7 +38,12 @@ export type SensorsStackScreenProps<T extends keyof SensorsStackParamList> =
 
 export type AnalyticsStackParamList = {
   Analytics: undefined;
+  Alerts: undefined;
+  Recommendations: undefined;
 };
+
+export type AnalyticsStackScreenProps<T extends keyof AnalyticsStackParamList> =
+  NativeStackScreenProps<AnalyticsStackParamList, T>;
 
 export type ProfileStackParamList = {
   Profile: undefined;

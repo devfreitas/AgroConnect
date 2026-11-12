@@ -10,6 +10,8 @@ export {
 } from './authService';
 export { setAuthTokenGetter, setUnauthorizedHandler } from './authBridge';
 export { config } from './config';
+export { listAlerts, markAlertAsRead } from './alertService';
+export { requestRecommendations } from './recommendationService';
 export { getDevice, getLatestReadings, listDevices, listSensors } from './deviceService';
 export { getHistory, type HistoryQuery } from './historyService';
 export {

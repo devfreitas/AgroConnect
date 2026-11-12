@@ -3,14 +3,15 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { LineChart } from '@/components/shared/LineChart';
 import { Screen } from '@/components/shared/Screen';
-import { Card, ChipGroup, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
+import { Button, Card, ChipGroup, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { getHistory, listDevices, listSensors } from '@/services';
 import { colors, spacing, typography } from '@/theme';
+import type { AnalyticsStackScreenProps } from '@/types/navigation';
 import { formatReadingValue, READING_INFO, READING_ORDER } from '@/utils/readings';
 import { buildRange, PERIODS, type PeriodKey } from '@/utils/period';
 
-export function AnalyticsScreen() {
+export function AnalyticsScreen({ navigation }: AnalyticsStackScreenProps<'Analytics'>) {
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [sensorId, setSensorId] = useState<string | null>(null);
   const [period, setPeriod] = useState<PeriodKey>('24h');
@@ -150,6 +151,14 @@ export function AnalyticsScreen() {
       onRefresh={refresh}
       refreshing={refreshing}
     >
+      <View style={styles.links}>
+        <Button title="Ver alertas" variant="outline" onPress={() => navigation.navigate('Alerts')} />
+        <Button
+          title="Ver recomendações da IA"
+          variant="outline"
+          onPress={() => navigation.navigate('Recommendations')}
+        />
+      </View>
       {renderContent()}
     </Screen>
   );
@@ -165,6 +174,7 @@ function Summary({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
+  links: { gap: spacing.sm },
   summary: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing.sm },
   summaryItem: { flex: 1, gap: spacing.xs },
   summaryLabel: { ...typography.label, color: colors.textMuted },

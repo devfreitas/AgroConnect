@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { InsightCard } from '@/components/shared/InsightCard';
+import { DataStatus } from '@/components/shared/DataStatus';
 import { Screen } from '@/components/shared/Screen';
 import { Button, Card, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
 import { useRemoteData } from '@/hooks/useRemoteData';
@@ -8,8 +9,10 @@ import { getErrorMessage, listAlerts, markAlertAsRead } from '@/services';
 import { ALERT_STATUS_LABELS } from '@/utils/severity';
 
 export function AlertsScreen() {
-  const { data, error, loading, refreshing, reload, refresh } = useRemoteData((signal) =>
-    listAlerts(undefined, signal),
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(
+    (signal) => listAlerts(undefined, signal),
+    [],
+    { cacheKey: 'alerts' },
   );
 
   const [markingId, setMarkingId] = useState<string | null>(null);
@@ -57,9 +60,7 @@ export function AlertsScreen() {
 
     return (
       <>
-        {error ? (
-          <Notice type="error" message={`Não foi possível atualizar. ${error.message}`} />
-        ) : null}
+        <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
         {actionError ? <Notice type="error" message={actionError} /> : null}
 
         {data.map((alert) => (

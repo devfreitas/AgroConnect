@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Alert, StyleSheet, Text } from 'react-native';
 
+import { DataStatus } from '@/components/shared/DataStatus';
 import { Screen } from '@/components/shared/Screen';
 import { Button, Card, ErrorState, Loader, Notice } from '@/components/ui';
 import { useAutoDismiss } from '@/hooks/useAutoDismiss';
@@ -15,9 +16,10 @@ export function PropertyDetailScreen({
   route,
 }: PlantationStackScreenProps<'PropertyDetail'>) {
   const { propertyId, notice } = route.params;
-  const { data, error, loading, refreshing, reload, refresh } = useRemoteData(
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(
     (signal) => getProperty(propertyId, signal),
     [propertyId],
+    { cacheKey: `property:${propertyId}` },
   );
 
   const [deleting, setDeleting] = useState(false);
@@ -79,7 +81,7 @@ export function PropertyDetailScreen({
       refreshing={refreshing}
     >
       {notice ? <Notice type="success" message={notice} /> : null}
-      {error ? <Notice type="error" message={`Não foi possível atualizar. ${error.message}`} /> : null}
+      <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
 
       <Card style={styles.card}>
         <Text style={styles.label}>Área</Text>

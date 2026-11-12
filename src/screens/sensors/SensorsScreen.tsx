@@ -1,12 +1,15 @@
 import { DeviceCard } from '@/components/shared/DeviceCard';
+import { DataStatus } from '@/components/shared/DataStatus';
 import { Screen } from '@/components/shared/Screen';
-import { Card, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
+import { Card, EmptyState, ErrorState, Loader } from '@/components/ui';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { listDevices } from '@/services';
 import type { SensorsStackScreenProps } from '@/types/navigation';
 
 export function SensorsScreen({ navigation }: SensorsStackScreenProps<'Sensors'>) {
-  const { data, error, loading, refreshing, reload, refresh } = useRemoteData(listDevices);
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(listDevices, [], {
+    cacheKey: 'devices',
+  });
 
   function renderContent() {
     if (loading) {
@@ -36,9 +39,7 @@ export function SensorsScreen({ navigation }: SensorsStackScreenProps<'Sensors'>
 
     return (
       <>
-        {error ? (
-          <Notice type="error" message={`Não foi possível atualizar. ${error.message}`} />
-        ) : null}
+        <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
         {data.map((device) => (
           <DeviceCard
             key={device.id}

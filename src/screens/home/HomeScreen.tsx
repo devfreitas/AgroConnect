@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { DataStatus } from '@/components/shared/DataStatus';
 import { ReadingCard } from '@/components/shared/ReadingCard';
 import { Screen } from '@/components/shared/Screen';
 import { Card, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
@@ -21,7 +22,7 @@ type Overview = {
 export function HomeScreen() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const { data, error, loading, refreshing, updatedAt, reload, refresh } =
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } =
     useRemoteData<Overview>(
       async (signal) => {
         const devices = await listDevices(signal);
@@ -30,6 +31,7 @@ export function HomeScreen() {
         return { devices, selected, latest };
       },
       [selectedId],
+      { cacheKey: `home:${selectedId}` },
     );
 
   function renderContent() {
@@ -66,9 +68,7 @@ export function HomeScreen() {
 
     return (
       <>
-        {error ? (
-          <Notice type="error" message={`Não foi possível atualizar. ${error.message}`} />
-        ) : null}
+        <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
 
         {latest?.simulatedData ? (
           <Notice
@@ -122,9 +122,6 @@ export function HomeScreen() {
           readings.map((reading) => <ReadingCard key={reading.sensorId} reading={reading} />)
         )}
 
-        {updatedAt ? (
-          <Text style={styles.updated}>Atualizado às {formatDateTime(updatedAt)}</Text>
-        ) : null}
       </>
     );
   }
@@ -159,5 +156,4 @@ const styles = StyleSheet.create({
   deviceInfo: { flex: 1 },
   deviceName: { ...typography.bodyStrong, color: colors.text },
   deviceStatus: { ...typography.caption, color: colors.textMuted },
-  updated: { ...typography.caption, color: colors.textMuted, textAlign: 'center' },
 });

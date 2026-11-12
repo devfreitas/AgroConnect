@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { PropertyCard } from '@/components/shared/PropertyCard';
+import { DataStatus } from '@/components/shared/DataStatus';
 import { Screen } from '@/components/shared/Screen';
 import { Button, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
 import { useAutoDismiss } from '@/hooks/useAutoDismiss';
@@ -9,7 +10,9 @@ import { listProperties } from '@/services';
 import type { PlantationStackScreenProps } from '@/types/navigation';
 
 export function PlantationScreen({ navigation, route }: PlantationStackScreenProps<'Plantation'>) {
-  const { data, error, loading, refreshing, reload, refresh } = useRemoteData(listProperties);
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(listProperties, [], {
+    cacheKey: 'properties',
+  });
 
   const notice = route.params?.notice;
   const dismissNotice = useCallback(() => navigation.setParams({ notice: undefined }), [navigation]);
@@ -34,7 +37,7 @@ export function PlantationScreen({ navigation, route }: PlantationStackScreenPro
 
     return (
       <>
-        {error ? <Notice type="error" message={`Não foi possível atualizar. ${error.message}`} /> : null}
+        <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
 
         {data.length === 0 ? (
           <EmptyState

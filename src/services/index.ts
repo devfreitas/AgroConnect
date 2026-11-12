@@ -10,6 +10,7 @@ export {
 } from './authService';
 export { setAuthTokenGetter, setUnauthorizedHandler } from './authBridge';
 export { config } from './config';
+export { clearCache, readCache, writeCache } from './cache';
 export { listAlerts, markAlertAsRead } from './alertService';
 export { requestRecommendations } from './recommendationService';
 export { getDevice, getLatestReadings, listDevices, listSensors } from './deviceService';

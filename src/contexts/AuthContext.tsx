@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import {
+  clearCache,
   fetchCurrentUser,
   loginRequest,
   logoutRequest,
@@ -55,6 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setSessionMessage(message ?? null);
     setStatus('unauthenticated');
     await clearSession();
+    await clearCache();
   }, []);
 
   const startSession = useCallback(async (token: string, nextUser: User) => {

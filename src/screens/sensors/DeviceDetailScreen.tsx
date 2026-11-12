@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { ReadingCard } from '@/components/shared/ReadingCard';
+import { DataStatus } from '@/components/shared/DataStatus';
 import { Screen } from '@/components/shared/Screen';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { Card, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
@@ -14,7 +15,7 @@ import { READING_INFO, READING_ORDER } from '@/utils/readings';
 export function DeviceDetailScreen({ route }: SensorsStackScreenProps<'DeviceDetail'>) {
   const { deviceId } = route.params;
 
-  const { data, error, loading, refreshing, reload, refresh } = useRemoteData(
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(
     async (signal) => {
       const [device, sensors, latest] = await Promise.all([
         getDevice(deviceId, signal),
@@ -24,6 +25,7 @@ export function DeviceDetailScreen({ route }: SensorsStackScreenProps<'DeviceDet
       return { device, sensors, latest };
     },
     [deviceId],
+    { cacheKey: `device:${deviceId}` },
   );
 
   if (loading) {
@@ -60,9 +62,7 @@ export function DeviceDetailScreen({ route }: SensorsStackScreenProps<'DeviceDet
       onRefresh={refresh}
       refreshing={refreshing}
     >
-      {error ? (
-        <Notice type="error" message={`Não foi possível atualizar. ${error.message}`} />
-      ) : null}
+      <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
 
       {latest.simulatedData ? (
         <Notice

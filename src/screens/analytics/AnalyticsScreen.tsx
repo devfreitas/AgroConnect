@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { LineChart } from '@/components/shared/LineChart';
+import { DataStatus } from '@/components/shared/DataStatus';
 import { Screen } from '@/components/shared/Screen';
 import { Button, Card, ChipGroup, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
 import { useRemoteData } from '@/hooks/useRemoteData';
@@ -16,7 +17,7 @@ export function AnalyticsScreen({ navigation }: AnalyticsStackScreenProps<'Analy
   const [sensorId, setSensorId] = useState<string | null>(null);
   const [period, setPeriod] = useState<PeriodKey>('24h');
 
-  const { data, error, loading, refreshing, reload, refresh } = useRemoteData(
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(
     async (signal) => {
       const devices = await listDevices(signal);
       const device = devices.find((item) => item.id === deviceId) ?? devices[0] ?? null;
@@ -36,6 +37,7 @@ export function AnalyticsScreen({ navigation }: AnalyticsStackScreenProps<'Analy
       return { devices, device, sensors, sensor, history };
     },
     [deviceId, sensorId, period],
+    { cacheKey: `analytics:${deviceId}:${sensorId}:${period}` },
   );
 
   function renderContent() {
@@ -68,9 +70,7 @@ export function AnalyticsScreen({ navigation }: AnalyticsStackScreenProps<'Analy
 
     return (
       <>
-        {error ? (
-          <Notice type="error" message={`Não foi possível atualizar. ${error.message}`} />
-        ) : null}
+        <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
 
         {devices.length > 1 ? (
           <ChipGroup

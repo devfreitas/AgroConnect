@@ -4,8 +4,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, Text } from 'react-native';
 
 import { AuthLayout } from '@/components/shared/AuthLayout';
-import { Button, Card, Input, TextLink } from '@/components/ui';
+import { Button, Card, Input, Notice, TextLink } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { config } from '@/services';
 import { colors, spacing, typography } from '@/theme';
 import type { AuthStackScreenProps } from '@/types/navigation';
 import { applyServerErrors } from '@/utils/formErrors';
@@ -40,6 +41,13 @@ export function LoginScreen({ navigation }: AuthStackScreenProps<'Login'>) {
 
   return (
     <AuthLayout title="Entrar" subtitle="Acesse sua conta para acompanhar a plantação.">
+      {!config.isConfigured ? (
+        <Notice
+          type="error"
+          message="Este build não tem as URLs das APIs. Gere o app com EXPO_PUBLIC_API_URL e EXPO_PUBLIC_AI_API_URL definidas."
+        />
+      ) : null}
+
       {sessionMessage ? (
         <Card accessibilityRole="alert">
           <Text style={styles.notice}>{sessionMessage}</Text>

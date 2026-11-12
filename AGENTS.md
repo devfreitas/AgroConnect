@@ -15,19 +15,18 @@ Use `bunx` instead of `npx` if the project uses bun (`bun.lock` present).
 ```bash
 npx expo install <package>  # ALWAYS use instead of npm/yarn/pnpm/bun add — resolves SDK-compatible versions
 npx expo start              # start the dev server
-npx expo lint               # lint
 npx tsc --noEmit            # typecheck
 npx expo-doctor             # diagnose dependency and config issues
 npx expo install --fix      # fix incompatible package versions
 ```
 
-Run lint and typecheck before declaring any task done.
+Run the typecheck (`npx tsc --noEmit`) before declaring any task done. This project has no ESLint or Prettier by team decision.
 
 ## Navigation & Routing
 
-- Use **Expo Router** for all navigation. Routes live in `src/app/` — every file there is a screen, `_layout.tsx` files define navigators. Keep non-route code (components, hooks, utils) outside `src/app/`.
-- Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`.
-- Docs: https://docs.expo.dev/router/introduction.md
+- Use **React Navigation** (mandatory for this project; do NOT use Expo Router). Navigators live in `src/navigation/`: `RootNavigator` (auth gate), `AuthNavigator`, `AppNavigator` (bottom tabs, one native stack per tab in `stacks/`). Route param types are in `src/types/navigation.ts`.
+- Screens live in `src/screens/<area>/`. Keep API calls in `src/services/`, never inside screens.
+- Docs: https://reactnavigation.org/docs/getting-started
 
 ## Building with EAS
 

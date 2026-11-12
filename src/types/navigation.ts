@@ -47,7 +47,11 @@ export type AnalyticsStackScreenProps<T extends keyof AnalyticsStackParamList> =
 
 export type ProfileStackParamList = {
   Profile: undefined;
+  About: undefined;
 };
+
+export type ProfileStackScreenProps<T extends keyof ProfileStackParamList> =
+  NativeStackScreenProps<ProfileStackParamList, T>;
 
 // Abas da área logada
 export type AppTabParamList = {

@@ -19,6 +19,12 @@ function getCommitHash() {
 // Complementa o app.json. O hash vai para `extra` e é exibido na tela "Sobre o App".
 module.exports = ({ config }) => ({
   ...config,
+  android: {
+    ...config.android,
+    // Arquivo do Firebase (necessário para notificações push). Não é versionado:
+    // no EAS vem da variável de arquivo GOOGLE_SERVICES_JSON; localmente, de ./google-services.json.
+    ...(process.env.GOOGLE_SERVICES_JSON ? { googleServicesFile: process.env.GOOGLE_SERVICES_JSON } : {}),
+  },
   extra: {
     ...config.extra,
     commitHash: getCommitHash(),

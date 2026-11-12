@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { AppNavigator } from './AppNavigator';
 import { AuthNavigator } from './AuthNavigator';
+import { PushNotificationsHandler } from './PushNotificationsHandler';
 
 export function RootNavigator() {
   const { status } = useAuth();
@@ -11,5 +12,14 @@ export function RootNavigator() {
     return <Loader fullScreen message="Verificando sua sessão..." />;
   }
 
-  return status === 'authenticated' ? <AppNavigator /> : <AuthNavigator />;
+  if (status === 'authenticated') {
+    return (
+      <>
+        <AppNavigator />
+        <PushNotificationsHandler />
+      </>
+    );
+  }
+
+  return <AuthNavigator />;
 }

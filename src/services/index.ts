@@ -11,6 +11,15 @@ export {
 export { setAuthTokenGetter, setUnauthorizedHandler } from './authBridge';
 export { config } from './config';
 export { clearCache, readCache, writeCache } from './cache';
+export {
+  configureNotifications,
+  ensureNotificationChannel,
+  getPushPermission,
+  registerPushToken,
+  requestPushPermission,
+  type PushPermission,
+  type PushPermissionStatus,
+} from './notificationService';
 export { listAlerts, markAlertAsRead } from './alertService';
 export { requestRecommendations } from './recommendationService';
 export { getDevice, getLatestReadings, listDevices, listSensors } from './deviceService';

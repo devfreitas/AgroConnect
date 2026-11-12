@@ -8,7 +8,7 @@ Gera o APK com o EAS Build e distribui pelo Firebase App Distribution. Somente A
 - Projeto no Firebase com um app Android cujo **ID do pacote** seja `com.devfreitas.agroconnect` (o mesmo de `android.package` no `app.json`).
 - As duas APIs no ar no Render, com URLs https.
 
-> `google-services.json` **não é necessário** para o App Distribution. Ele só entra se o app passar a usar o Firebase dentro do código (por exemplo, notificações push com FCM).
+> `google-services.json` **não é necessário** para o App Distribution. Ele é necessário apenas para as **notificações push** (seção 6).
 
 ## 1. Hash do commit na tela "Sobre o App"
 
@@ -67,3 +67,19 @@ O `ID_DO_APP_NO_FIREBASE` aparece em **Configurações do projeto → Seus apps*
 - [ ] A tela "Sobre o App" mostra o hash do commit final, sem `-alterado`.
 - [ ] Os horários dos dados fictícios foram atualizados para "agora" (senão os dispositivos aparecem offline).
 - [ ] O link do vídeo do YouTube está no `README.md`.
+
+## 6. Notificações push (opcional)
+
+O app já pede permissão e registra o token (`POST /me/push-tokens`). Para a notificação chegar no Android:
+
+1. No Firebase, abra o app Android (`com.devfreitas.agroconnect`) e baixe o `google-services.json`.
+2. Guarde-o como variável de arquivo no EAS (ele não é versionado):
+   ```bash
+   npx eas-cli@latest env:create --name GOOGLE_SERVICES_JSON --type file \
+     --value ./google-services.json --environment preview --visibility secret
+   ```
+3. Cadastre a chave de serviço do FCM V1 no EAS: `npx eas-cli@latest credentials` → Android → Google Service Account Key for FCM V1.
+4. Gere o APK de novo (seção 3). O projeto precisa estar vinculado ao EAS (`eas init`), pois o token usa o `projectId`.
+5. Teste enviando uma notificação pela ferramenta https://expo.dev/notifications com o token do aparelho, ou pela API quando o backend implementar o envio.
+
+Limites: não funciona no emulador nem no Expo Go. Se a permissão for negada, o app segue normal; o usuário pode ativar em **Perfil → Notificações de alertas**.

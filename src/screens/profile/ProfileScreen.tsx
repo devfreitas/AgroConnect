@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, StyleSheet, Text } from 'react-native';
 
+import { NotificationsSetting } from '@/components/shared/NotificationsSetting';
 import { Screen } from '@/components/shared/Screen';
 import { Button, Card } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
@@ -42,6 +43,8 @@ export function ProfileScreen({ navigation }: ProfileStackScreenProps<'Profile'>
           </>
         ) : null}
       </Card>
+
+      <NotificationsSetting />
 
       <Button
         title="Sobre o App"

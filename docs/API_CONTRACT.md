@@ -199,6 +199,19 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 - A resposta pode demorar. O app tem timeout de 60 s e indicador de carregamento.
 - Nenhuma recomendação aciona equipamento.
 
+## 9.1 Notificações push (API C#)
+
+| Método e rota | Corpo | Resposta |
+|---|---|---|
+| `POST /me/push-tokens` | `{ "token": "ExponentPushToken[...]", "platform": "android" }` | `204` ou `200` |
+
+- O app envia o token logo após o login, se o usuário permitir notificações. A chamada deve ser **idempotente** (mesmo token, mesmo usuário: atualiza, não duplica).
+- O backend envia a notificação pela [API de push da Expo](https://docs.expo.dev/push-notifications/sending-notifications/) (`https://exp.host/--/api/v2/push/send`), quando criar um alerta.
+- Payload sugerido: `{ "to": "<token>", "title": "...", "body": "...", "channelId": "alerts", "data": { "screen": "alerts", "alertId": "uuid" } }`. Texto informativo, sem alarmismo. O app abre a lista de alertas ao tocar.
+- `POST /auth/logout` deve invalidar os tokens de push do usuário naquele aparelho.
+- Falha ao registrar o token **não** afeta o uso do app: o registro é tentado de novo no próximo acesso.
+- Não funciona no emulador nem no Expo Go: só no APK gerado pelo EAS, com as credenciais FCM configuradas (ver `docs/BUILD_E_DISTRIBUICAO.md`).
+
 ## 10. Origem dos dados
 
 - Banco: PostgreSQL, schema `agroconnect`. O mobile nunca o acessa, só as APIs.
@@ -206,7 +219,7 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 - Consequência: a última leitura não avança sozinha. O status do dispositivo (`ONLINE`, `UNSTABLE`, `OFFLINE`), calculado pela última comunicação, só aparece como online se os `recorded_at` forem recentes. **Atualizar os timestamps para "agora" antes da demonstração e da gravação do vídeo.**
 - Toda resposta com leituras deve trazer `simulatedData: true`, e o app exibe um aviso de dados de demonstração.
 - Cenários cadastrados: dispositivos `ESP32-001` e `ESP32-002`, dispositivo offline, sensor com falha (`SENSOR_ERROR`), leitura não calibrada (`UNCALIBRATED`) e intervalo sem leituras. O app trata cada um como estado de interface.
-- Fora do app por ora: refresh de token, recuperação de senha, atualização e exclusão de talhões e plantios, notificações push, `ai_interactions` e `weather_history`.
+- Fora do app por ora: refresh de token, recuperação de senha, atualização e exclusão de talhões e plantios, `ai_interactions` e `weather_history`.
 
 ## 11. Pontos para validar com o Backend e a IA
 
@@ -219,3 +232,4 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 7. Culturas: existe catálogo (`crops`)? Proposta: `GET /crops` e plantio com `cropId` no lugar de `cropName`.
 8. Recomendação: a IA gera na hora (`POST /recommendations`) ou o app lê a tabela `recommendations` (`GET`)?
 9. Tipo dos IDs: UUID (string) ou inteiro?
+10. Push: quem envia (a API C# ao criar o alerta?) e se haverá `POST /me/push-tokens`.

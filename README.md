@@ -19,7 +19,7 @@ _Link do YouTube: a preencher (até 5 minutos)._
 | Plantação | Lista de propriedades, detalhe, cadastro e edição, exclusão |
 | Sensores | Lista de dispositivos, detalhe com sensores e última leitura |
 | Análises | Histórico com filtros e gráfico, alertas, recomendações da IA |
-| Perfil | Dados da conta, Sobre o App (versão e hash do commit), sair |
+| Perfil | Dados da conta, notificações de alertas, Sobre o App (versão e hash do commit), sair |
 
 O CRUD completo é o de **propriedades** (listar, ver, criar, editar e excluir), sempre pela API.
 
@@ -31,6 +31,7 @@ O CRUD completo é o de **propriedades** (listar, ver, criar, editar e excluir),
 - React Hook Form e Zod (formulários e validação)
 - Expo SecureStore (token e sessão) e AsyncStorage (cache de leitura offline)
 - react-native-svg (gráfico de linha)
+- expo-notifications (push de alertas, Android)
 
 ## Arquitetura
 
@@ -82,4 +83,5 @@ O app é construído contra [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md), uma 
 
 - Listas buscam apenas a primeira página (até 100 itens).
 - Criar, editar e excluir exigem conexão; não há fila de envio posterior.
-- Sem refresh de token, recuperação de senha, notificações push e gerenciamento de talhões e plantios.
+- Sem refresh de token, recuperação de senha e gerenciamento de talhões e plantios.
+- Notificações push dependem do backend (`POST /me/push-tokens` e envio) e das credenciais FCM; só funcionam no APK, não no Expo Go.

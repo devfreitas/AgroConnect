@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "owner": "dev.freitas",
     "ios": {
       "supportsTablet": true
     },
@@ -29,6 +30,11 @@
           "color": "#C46B38"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9191f9ed-a208-4c3e-87d8-e4fd425e449e"
+      }
+    }
   }
 }

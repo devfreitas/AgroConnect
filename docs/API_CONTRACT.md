@@ -1,19 +1,22 @@
 # AgroConnect: contrato de API esperado pelo app mobile
 
-**Status:** PROPOSTA. Não é um contrato confirmado. O Backend e a IA devem validar, ajustar e responder o que divergir. O app é construído contra este documento e só será testado de ponta a ponta quando as APIs e o banco estiverem no ar.
+**Status:** o Backend entregou a API (`https://gs-dotnet-8wmg.onrender.com`) e este documento foi conferido com o código dela. O teste de ponta a ponta no aparelho ainda será feito.
 
-## 1. Duas APIs
+## 1. APIs
 
 | API | Responsabilidade | Variável no app |
 |---|---|---|
 | API principal (C#) | Autenticação, CRUD, dispositivos, leituras, histórico, alertas | `EXPO_PUBLIC_API_URL` |
-| API de IA | Recomendações a partir dos dados armazenados no PostgreSQL | `EXPO_PUBLIC_AI_API_URL` |
+| Recomendações | Rota `POST /recommendations` da própria API C#. É demonstrativa: gera recomendações a partir dos alertas, sem modelo de IA nem serviço separado | `EXPO_PUBLIC_AI_API_URL` (opcional; padrão: a mesma URL) |
 
 O app nunca acessa banco, broker MQTT nem dispositivo.
 
 ## 2. Convenções
 
 - Prefixo `/api/v1`. JSON.
+- Erros de validação chegam como `400` com `details` (mapa campo → mensagem). Excesso de requisições: `429` (`RATE_LIMITED`).
+- Criações repetidas em até 5 minutos são deduplicadas pelo backend (idempotência).
+- Datas podem vir com 7 casas decimais nos segundos; o app normaliza.
 - Datas em ISO 8601 **UTC com sufixo `Z`**. IDs em **UUID** (string).
 - Autenticação do usuário: `Authorization: Bearer <accessToken>`.
 - Paginação nas listas: query `page` (começa em 1) e `size` (padrão 20, máximo 100).
@@ -65,7 +68,7 @@ O app nunca acessa banco, broker MQTT nem dispositivo.
 - Cadastro: nome ≥ 2 caracteres, e-mail válido, senha ≥ 8. E-mail repetido → `409`.
 - Login inválido → `401` com `"E-mail ou senha inválidos."`.
 - Refresh de token: opcional. Se existir, avisar o Mobile.
-- **A decidir (Backend + IA):** como a API de IA valida o token (mesmo JWT, chave compartilhada).
+- As recomendações usam o mesmo JWT, pois estão na mesma API.
 
 ## 5. Propriedades (CRUD completo, obrigatório)
 
@@ -175,7 +178,7 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 
 `severity`: `INFO`, `WARNING`, `CRITICAL`. `status`: `UNREAD`, `READ`, `RESOLVED`.
 
-## 9. Recomendações (API de IA)
+## 9. Recomendações (rota demonstrativa da API C#)
 
 `POST /recommendations` com `{ "deviceId": "uuid" }` → `200` Page de Recommendation.
 
@@ -221,10 +224,10 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 - Cenários cadastrados: dispositivos `ESP32-001` e `ESP32-002`, dispositivo offline, sensor com falha (`SENSOR_ERROR`), leitura não calibrada (`UNCALIBRATED`) e intervalo sem leituras. O app trata cada um como estado de interface.
 - Fora do app por ora: refresh de token, recuperação de senha, atualização e exclusão de talhões e plantios, `ai_interactions` e `weather_history`.
 
-## 11. Pontos para validar com o Backend e a IA
+## 11. Pontos a validar nos testes finais
 
 1. Formatos de `Page`, de erro e de AuthResponse.
-2. Autenticação da API de IA (token compartilhado, intermediária pela C# ou outra).
+2. (Resolvido) Recomendações na API C#, mesmo token.
 3. Quem serve leituras e histórico (proposta: API C#).
 4. Resposta da IA gerada na hora ou pré-calculada.
 5. Umidade do solo: porcentagem calibrada ou escala relativa.

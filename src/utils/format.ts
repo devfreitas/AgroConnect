@@ -1,3 +1,11 @@
+/**
+ * Converte uma data ISO da API em Date. O backend (.NET) pode enviar até 7 casas decimais nos
+ * segundos (ex.: "2026-11-10T14:30:00.1234567Z"), que o Hermes pode não aceitar: cortamos para 3.
+ */
+export function parseApiDate(iso: string): Date {
+  return new Date(iso.replace(/(\.\d{3})\d+/, '$1'));
+}
+
 /** Área em hectares, no padrão brasileiro (ex.: "3,5 ha"). */
 export function formatHectares(value: number): string {
   return `${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} ha`;
@@ -5,13 +13,13 @@ export function formatHectares(value: number): string {
 
 /** Data no padrão brasileiro (ex.: "10/11/2026"). Retorna "—" se a data for inválida. */
 export function formatDate(iso: string): string {
-  const date = new Date(iso);
+  const date = parseApiDate(iso);
   return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString('pt-BR');
 }
 
 /** Data e hora no padrão brasileiro (ex.: "10/11/2026 14:30"). Retorna "—" se for inválida. */
 export function formatDateTime(iso: string | Date): string {
-  const date = typeof iso === 'string' ? new Date(iso) : iso;
+  const date = typeof iso === 'string' ? parseApiDate(iso) : iso;
   if (Number.isNaN(date.getTime())) return '—';
   const day = date.toLocaleDateString('pt-BR');
   const time = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });

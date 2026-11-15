@@ -27,7 +27,7 @@ O CRUD completo é o de **propriedades** (listar, ver, criar, editar e excluir),
 
 - React Native, TypeScript e Expo (SDK 58)
 - React Navigation 7: native stack e bottom tabs (5 abas, uma pilha por aba)
-- Axios, com dois clientes: API principal (C#) e API de IA
+- Axios, com dois clientes (principal e recomendações); hoje ambos apontam para a API C#
 - React Hook Form e Zod (formulários e validação)
 - Expo SecureStore (token e sessão) e AsyncStorage (cache de leitura offline)
 - react-native-svg (gráfico de linha)
@@ -63,7 +63,7 @@ Decisões principais:
 ```bash
 npm install
 cp .env.example .env     # no PowerShell: Copy-Item .env.example .env
-# edite o .env com as URLs reais das APIs (https)
+# edite o .env com as URL real da API (https)
 npx expo start -c
 ```
 

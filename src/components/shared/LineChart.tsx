@@ -4,7 +4,7 @@ import Svg, { Circle, Line, Polyline } from 'react-native-svg';
 
 import { colors, spacing, typography } from '@/theme';
 import type { HistoryPoint } from '@/types/domain';
-import { formatDateTime } from '@/utils/format';
+import { formatDateTime, parseApiDate } from '@/utils/format';
 
 type LineChartProps = {
   points: HistoryPoint[];
@@ -24,7 +24,7 @@ export function LineChart({ points, unit, height = 200 }: LineChartProps) {
   const valid = points.filter((point) => point.value !== null);
   if (valid.length === 0) return null;
 
-  const times = points.map((point) => new Date(point.timestamp).getTime());
+  const times = points.map((point) => parseApiDate(point.timestamp).getTime());
   const values = valid.map((point) => point.value as number);
 
   const minTime = Math.min(...times);

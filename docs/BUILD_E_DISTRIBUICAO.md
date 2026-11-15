@@ -6,7 +6,7 @@ Gera o APK com o EAS Build e distribui pelo Firebase App Distribution. Somente A
 
 - Conta Expo e o repositório com o último commit enviado (`git push`).
 - Projeto no Firebase com um app Android cujo **ID do pacote** seja `com.devfreitas.agroconnect` (o mesmo de `android.package` no `app.json`).
-- As duas APIs no ar no Render, com URLs https.
+- A API (C#) no ar no Render, com URL https: `https://gs-dotnet-8wmg.onrender.com`.
 
 > `google-services.json` **não é necessário** para o App Distribution. Ele é necessário apenas para as **notificações push** (seção 6).
 
@@ -25,12 +25,10 @@ O `.env` local não vai para o build na nuvem. Cadastre as URLs no EAS (elas sã
 npx eas-cli@latest login
 
 npx eas-cli@latest env:create --name EXPO_PUBLIC_API_URL \
-  --value https://SEU-SERVICO-API.onrender.com/api/v1 \
+  --value https://gs-dotnet-8wmg.onrender.com/api/v1 \
   --environment preview --visibility plaintext
 
-npx eas-cli@latest env:create --name EXPO_PUBLIC_AI_API_URL \
-  --value https://SEU-SERVICO-IA.onrender.com/api/v1 \
-  --environment preview --visibility plaintext
+# EXPO_PUBLIC_AI_API_URL é opcional: as recomendações saem da mesma API.
 ```
 
 Nunca cadastre senhas, tokens ou chaves em variáveis `EXPO_PUBLIC_*`: elas ficam embutidas no APK.

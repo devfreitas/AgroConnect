@@ -4,14 +4,14 @@
 const DEV_API_URL = 'http://localhost:5000/api/v1';
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL ?? (__DEV__ ? DEV_API_URL : '');
-// As recomendações são servidas pela própria API C# (rota demonstrativa). A variável da API de IA
-// é opcional: se não existir, usa a URL da API principal.
+// As recomendações passam pela própria API principal (que consulta o serviço de IA por baixo).
+// A variável da API de IA é opcional: se não existir, usa a URL da API principal.
 const aiApiUrl = process.env.EXPO_PUBLIC_AI_API_URL || apiUrl;
 
 export const config = {
-  /** API principal (C#): autenticação, CRUD, leituras, histórico e alertas. */
+  /** API principal (Java): autenticação, CRUD, leituras, histórico e alertas. */
   apiUrl,
-  /** Recomendações (hoje na própria API C#; pode apontar para outro serviço). */
+  /** Recomendações (hoje na própria API principal; pode apontar para outro serviço). */
   aiApiUrl,
   /** Falso quando o build não recebeu as URLs das APIs. */
   isConfigured: apiUrl !== '',

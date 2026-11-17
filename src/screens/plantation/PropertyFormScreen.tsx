@@ -24,11 +24,7 @@ export function PropertyFormScreen(props: FormScreenProps) {
 function CreatePropertyContent({ navigation }: FormScreenProps) {
   return (
     <KeyboardAvoidingView style={styles.flex} behavior="padding">
-      <Screen
-        title="Nova propriedade"
-        subtitle="Informe os dados da propriedade."
-        safeTop={false}
-      >
+      <Screen title="Nova propriedade" subtitle="Informe os dados da propriedade." safeTop={false}>
         <PropertyForm
           initialValues={emptyPropertyForm}
           submitLabel="Cadastrar propriedade"
@@ -70,11 +66,7 @@ function EditPropertyContent({ navigation, propertyId }: FormScreenProps & { pro
 
   return (
     <KeyboardAvoidingView style={styles.flex} behavior="padding">
-      <Screen
-        title="Editar propriedade"
-        subtitle="Atualize os dados e salve."
-        safeTop={false}
-      >
+      <Screen title="Editar propriedade" subtitle="Atualize os dados e salve." safeTop={false}>
         <PropertyForm
           initialValues={toFormValues(data)}
           submitLabel="Salvar alterações"

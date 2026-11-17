@@ -33,8 +33,10 @@ export type SensorsStackParamList = {
   DeviceDetail: { deviceId: string };
 };
 
-export type SensorsStackScreenProps<T extends keyof SensorsStackParamList> =
-  NativeStackScreenProps<SensorsStackParamList, T>;
+export type SensorsStackScreenProps<T extends keyof SensorsStackParamList> = NativeStackScreenProps<
+  SensorsStackParamList,
+  T
+>;
 
 export type AnalyticsStackParamList = {
   Analytics: undefined;
@@ -50,8 +52,10 @@ export type ProfileStackParamList = {
   About: undefined;
 };
 
-export type ProfileStackScreenProps<T extends keyof ProfileStackParamList> =
-  NativeStackScreenProps<ProfileStackParamList, T>;
+export type ProfileStackScreenProps<T extends keyof ProfileStackParamList> = NativeStackScreenProps<
+  ProfileStackParamList,
+  T
+>;
 
 // Abas da área logada
 export type AppTabParamList = {

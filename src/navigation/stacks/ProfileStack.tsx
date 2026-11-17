@@ -2,8 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { AboutScreen } from '@/screens/profile/AboutScreen';
 import { ProfileScreen } from '@/screens/profile/ProfileScreen';
-import { colors } from '@/theme';
 import type { ProfileStackParamList } from '@/types/navigation';
+
+import { detailHeader } from '../headerOptions';
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
@@ -14,13 +15,7 @@ export function ProfileStack() {
       <Stack.Screen
         name="About"
         component={AboutScreen}
-        options={{
-          headerShown: true,
-          title: 'Sobre o App',
-          headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerShadowVisible: false,
-        }}
+        options={{ ...detailHeader, title: 'Sobre o App' }}
       />
     </Stack.Navigator>
   );

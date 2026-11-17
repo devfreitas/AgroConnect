@@ -1,8 +1,8 @@
 import { config } from './config';
 import { createHttpClient } from './httpClient';
 
-/** API principal (C#): autenticação, CRUD, leituras, histórico e alertas. */
+/** API principal (Java): autenticação, CRUD, leituras, histórico e alertas. */
 export const api = createHttpClient(config.apiUrl);
 
-/** API de IA: recomendações. */
+/** Recomendações (hoje na mesma API; pode apontar para outro serviço). */
 export const aiApi = createHttpClient(config.aiApiUrl);

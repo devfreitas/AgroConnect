@@ -1,10 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { ReadingCard } from '@/components/shared/ReadingCard';
 import { DataStatus } from '@/components/shared/DataStatus';
+import { InfoRow } from '@/components/shared/InfoRow';
+import { ReadingCard } from '@/components/shared/ReadingCard';
 import { Screen } from '@/components/shared/Screen';
+import { SignalBars } from '@/components/shared/SignalBars';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { Card, EmptyState, ErrorState, Loader, Notice } from '@/components/ui';
+import {
+  Card,
+  EmptyState,
+  ErrorState,
+  Notice,
+  SectionHeader,
+  SkeletonCards,
+} from '@/components/ui';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { getDevice, getLatestReadings, listSensors } from '@/services';
 import { colors, spacing, typography } from '@/theme';
@@ -31,7 +40,7 @@ export function DeviceDetailScreen({ route }: SensorsStackScreenProps<'DeviceDet
   if (loading) {
     return (
       <Screen title="Dispositivo" safeTop={false}>
-        <Loader message="Carregando dispositivo..." />
+        <SkeletonCards count={3} />
       </Screen>
     );
   }
@@ -56,11 +65,22 @@ export function DeviceDetailScreen({ route }: SensorsStackScreenProps<'DeviceDet
 
   return (
     <Screen
+      eyebrow={device.code}
       title={device.name}
-      subtitle={device.code}
+      subtitle={
+        device.lastSeenAt
+          ? `Último contato em ${formatDateTime(device.lastSeenAt)}`
+          : 'Sem contato registrado'
+      }
       safeTop={false}
       onRefresh={refresh}
       refreshing={refreshing}
+      hero={
+        <View style={styles.heroRow}>
+          <StatusBadge status={device.status} />
+          <SignalBars rssi={device.rssi} showValue />
+        </View>
+      }
     >
       <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
 
@@ -71,29 +91,12 @@ export function DeviceDetailScreen({ route }: SensorsStackScreenProps<'DeviceDet
         />
       ) : null}
 
-      <Card style={styles.info}>
-        <Text style={styles.label}>Estado</Text>
-        <StatusBadge status={device.status} />
-
-        <Text style={styles.label}>Último contato</Text>
-        <Text style={styles.value}>
-          {device.lastSeenAt ? formatDateTime(device.lastSeenAt) : 'Sem contato registrado'}
-        </Text>
-
-        <Text style={styles.label}>Sinal (RSSI)</Text>
-        <Text style={styles.value}>{device.rssi !== null ? `${device.rssi} dBm` : '—'}</Text>
-
-        <Text style={styles.label}>Firmware</Text>
-        <Text style={styles.value}>{device.firmwareVersion}</Text>
-      </Card>
-
-      <Text style={styles.section} accessibilityRole="header">
-        Sensores
-      </Text>
+      <SectionHeader title="Sensores" />
 
       {sorted.length === 0 ? (
         <Card>
           <EmptyState
+            iconName="hardware-chip-outline"
             title="Nenhum sensor cadastrado"
             description="Este dispositivo ainda não tem sensores vinculados."
           />
@@ -106,23 +109,34 @@ export function DeviceDetailScreen({ route }: SensorsStackScreenProps<'DeviceDet
             <ReadingCard key={sensor.id} reading={reading} />
           ) : (
             <Card key={sensor.id} style={styles.noReading}>
-              <View>
-                <Text style={styles.sensorName}>{sensor.label || READING_INFO[sensor.type].label}</Text>
-                <Text style={styles.value}>Sem leitura registrada</Text>
-              </View>
+              <Text style={styles.sensorName}>
+                {sensor.label || READING_INFO[sensor.type].label}
+              </Text>
+              <Text style={styles.value}>Sem leitura registrada</Text>
             </Card>
           );
         })
       )}
+
+      <SectionHeader title="Informações técnicas" />
+      <Card style={styles.info}>
+        <InfoRow
+          icon="wifi-outline"
+          label="Sinal (RSSI)"
+          value={device.rssi !== null ? `${device.rssi} dBm` : '—'}
+        />
+        <View style={styles.divider} />
+        <InfoRow icon="code-slash-outline" label="Firmware" value={device.firmwareVersion} />
+      </Card>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  heroRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   info: { gap: spacing.xs },
-  label: { ...typography.label, color: colors.textMuted, marginTop: spacing.sm },
-  value: { ...typography.bodyStrong, color: colors.text },
-  section: { ...typography.heading, color: colors.text },
+  divider: { height: 1, backgroundColor: colors.border, marginLeft: 56 },
   noReading: { gap: spacing.xs },
   sensorName: { ...typography.label, color: colors.textMuted },
+  value: { ...typography.bodyStrong, color: colors.text },
 });

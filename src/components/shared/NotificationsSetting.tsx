@@ -1,8 +1,8 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useState } from 'react';
-import { AppState, Linking, StyleSheet, Text } from 'react-native';
+import { AppState, Linking, StyleSheet, Text, View } from 'react-native';
 
-import { Button, Card } from '@/components/ui';
+import { Badge, Button, Card, IconBadge } from '@/components/ui';
 import {
   getPushPermission,
   registerPushToken,
@@ -63,10 +63,30 @@ export function NotificationsSetting() {
 
   return (
     <Card style={styles.card}>
-      <Text style={styles.label}>Notificações de alertas</Text>
-      <Text style={styles.value}>
-        {permission === null ? '—' : granted ? 'Ativadas' : 'Desativadas'}
-      </Text>
+      <View style={styles.row}>
+        <IconBadge
+          icon={granted ? 'notifications' : 'notifications-off-outline'}
+          color={granted ? colors.success : colors.primaryDark}
+          background={granted ? colors.successSoft : colors.primarySoft}
+          size={44}
+        />
+        <View style={styles.text}>
+          <Text style={styles.label}>Notificações de alertas</Text>
+          <Text style={styles.hint}>
+            {granted
+              ? 'Você será avisado quando surgir um alerta.'
+              : 'Receba um aviso quando surgir um alerta.'}
+          </Text>
+        </View>
+        {permission !== null ? (
+          <Badge
+            label={granted ? 'Ativadas' : 'Desativadas'}
+            tone={granted ? 'success' : 'neutral'}
+            icon={granted ? 'checkmark-circle' : 'remove-circle-outline'}
+          />
+        ) : null}
+      </View>
+
       {permission && !granted ? (
         <Button
           title={
@@ -75,6 +95,7 @@ export function NotificationsSetting() {
               : 'Ativar notificações'
           }
           variant="outline"
+          icon="notifications-outline"
           onPress={() => void enable()}
           loading={busy}
         />
@@ -84,7 +105,9 @@ export function NotificationsSetting() {
 }
 
 const styles = StyleSheet.create({
-  card: { gap: spacing.xs },
-  label: { ...typography.label, color: colors.textMuted },
-  value: { ...typography.bodyStrong, color: colors.text, marginBottom: spacing.xs },
+  card: { gap: spacing.md },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  text: { flex: 1, gap: 2 },
+  label: { ...typography.bodyStrong, color: colors.text },
+  hint: { ...typography.caption, lineHeight: 18, color: colors.textMuted },
 });

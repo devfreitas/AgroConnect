@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { AuthLayout } from '@/components/shared/AuthLayout';
-import { Button, Card, Input, TextLink } from '@/components/ui';
+import { Button, Input, TextLink } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { colors, spacing, typography } from '@/theme';
 import type { AuthStackScreenProps } from '@/types/navigation';
@@ -39,13 +39,15 @@ export function RegisterScreen({ navigation }: AuthStackScreenProps<'Register'>)
 
   return (
     <AuthLayout title="Criar conta" subtitle="Cadastre-se para monitorar a sua plantação.">
-      <Card style={styles.form}>
+      <View style={styles.form}>
         <Controller
           control={control}
           name="name"
           render={({ field: { value, onChange, onBlur } }) => (
             <Input
+              tone="soft"
               label="Nome"
+              icon="person-outline"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -62,7 +64,9 @@ export function RegisterScreen({ navigation }: AuthStackScreenProps<'Register'>)
           name="email"
           render={({ field: { value, onChange, onBlur } }) => (
             <Input
+              tone="soft"
               label="E-mail"
+              icon="mail-outline"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -80,7 +84,9 @@ export function RegisterScreen({ navigation }: AuthStackScreenProps<'Register'>)
           name="password"
           render={({ field: { value, onChange, onBlur } }) => (
             <Input
+              tone="soft"
               label="Senha"
+              icon="lock-closed-outline"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -99,7 +105,9 @@ export function RegisterScreen({ navigation }: AuthStackScreenProps<'Register'>)
           name="confirmPassword"
           render={({ field: { value, onChange, onBlur } }) => (
             <Input
+              tone="soft"
               label="Confirmar senha"
+              icon="shield-checkmark-outline"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -120,8 +128,13 @@ export function RegisterScreen({ navigation }: AuthStackScreenProps<'Register'>)
           </Text>
         ) : null}
 
-        <Button title="Criar conta" onPress={onSubmit} loading={isSubmitting} />
-      </Card>
+        <Button
+          title="Criar conta"
+          icon="person-add-outline"
+          onPress={onSubmit}
+          loading={isSubmitting}
+        />
+      </View>
 
       <TextLink
         prefix="Já tem conta?"

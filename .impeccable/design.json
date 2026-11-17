@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T13:33:00.000Z",
+  "title": "Design System: AgroConnect",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Terracota",
+        "canonical": "#C46B38",
+        "tonalRamp": ["#562B12", "#7D3F1B", "#A25225", "#C46B38", "#D3885C", "#E2A784", "#F0C7B0", "#FCEEE7"]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Dourado Areia",
+        "canonical": "#D9B77E",
+        "tonalRamp": ["#67502B", "#8E6F3E", "#B69155", "#D9B77E", "#E2C799", "#EBD7B7", "#F5E8D6", "#FAF4ED"]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Táupe",
+        "canonical": "#A18D72",
+        "tonalRamp": ["#443A2C", "#625441", "#817058", "#A18D72", "#B6A691", "#CCC0B1", "#E2DBD2", "#F3F0EC"]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Bege Claro (Parchment)",
+        "canonical": "#EAD9C1",
+        "tonalRamp": ["#63533D", "#897558", "#B39C78", "#CBB89A", "#DCC9B0", "#EAD9C1", "#F4EBE0", "#FBF7F3"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Superfície Off-White",
+        "canonical": "#FFFBF5",
+        "tonalRamp": ["#877D6F", "#B4A897", "#D5CCBF", "#EBE4D9", "#F5EFE7", "#FBF7F0", "#FFFBF5", "#FFFFFF"]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Marrom Café",
+        "canonical": "#382719",
+        "tonalRamp": ["#160F0A", "#261A10", "#382719", "#563E29", "#78583D", "#9C7655", "#C29E7E", "#E6D1BD"]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Terra Suave",
+        "canonical": "#6B5844",
+        "tonalRamp": ["#31261B", "#493A2A", "#6B5844", "#8A735B", "#AA937A", "#C8B6A2", "#E3D7C9", "#F4EFEA"]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Divisória Sand",
+        "canonical": "#D6C3A5",
+        "tonalRamp": ["#594931", "#7E6948", "#A48B63", "#C4AA82", "#D6C3A5", "#E4D6C0", "#EFE6D9", "#F9F6F1"]
+      },
+      "primary-contrast": {
+        "role": "neutral",
+        "displayName": "Branco Puro",
+        "canonical": "#FFFFFF",
+        "tonalRamp": ["#666666", "#888888", "#AAAAAA", "#CCCCCC", "#E5E5E5", "#F2F2F2", "#FAFAFA", "#FFFFFF"]
+      },
+      "success": {
+        "role": "semantic",
+        "displayName": "Verde Folha",
+        "canonical": "#4F7A3A",
+        "tonalRamp": ["#1E3115", "#2C471E", "#3D602B", "#4F7A3A", "#6D9B55", "#8EBA76", "#B4D6A1", "#DFEED6"]
+      },
+      "warning": {
+        "role": "semantic",
+        "displayName": "Âmbar Colheita",
+        "canonical": "#B7791F",
+        "tonalRamp": ["#492F09", "#6C450E", "#915E15", "#B7791F", "#CF9339", "#E2B060", "#F0CD90", "#FAECCD"]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Vermelho Alerta",
+        "canonical": "#B3261E",
+        "tonalRamp": ["#4A0C08", "#6D130E", "#8F1C15", "#B3261E", "#CD4E47", "#DE7A74", "#EBA6A2", "#F8D9D7"]
+      },
+      "info": {
+        "role": "semantic",
+        "displayName": "Azul Orvalho",
+        "canonical": "#3E6A8A",
+        "tonalRamp": ["#152836", "#213C50", "#2F526C", "#3E6A8A", "#5D87A6", "#81A5C1", "#ACCAE0", "#DBEAF4"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero metrics and high-impact focal headers." },
+      "title": { "displayName": "Title", "purpose": "Primary screen titles and modal headers." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles and card group headers." },
+      "body": { "displayName": "Body", "purpose": "General body text, descriptions, and input text." },
+      "label": { "displayName": "Label", "purpose": "Form field labels, chip labels, and metadata." }
+    },
+    "shadows": [
+      { "name": "flat-tonal", "value": "none", "purpose": "Surfaces are flat-by-default; depth is conveyed via surface colors and 1px border outlines." }
+    ],
+    "motion": [
+      { "name": "pressed-feedback", "value": "opacity 0.85 (instant)", "purpose": "Immediate tactile feedback on mobile touch." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "360px" },
+      { "name": "tablet", "value": "600px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary call-to-action button with 48dp touch target.",
+      "html": "<button class=\"ds-btn-primary\">Salvar Alterações</button>",
+      "css": ".ds-btn-primary { background-color: #C46B38; color: #FFFFFF; min-height: 48px; padding: 8px 24px; border-radius: 12px; border: 1.5px solid #C46B38; font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; } .ds-btn-primary:active { opacity: 0.85; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary action button in warm sand gold.",
+      "html": "<button class=\"ds-btn-secondary\">Adicionar Talhão</button>",
+      "css": ".ds-btn-secondary { background-color: #D9B77E; color: #382719; min-height: 48px; padding: 8px 24px; border-radius: 12px; border: 1.5px solid #D9B77E; font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; } .ds-btn-secondary:active { opacity: 0.85; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Bordered button for non-blocking secondary choices.",
+      "html": "<button class=\"ds-btn-outline\">Cancelar</button>",
+      "css": ".ds-btn-outline { background-color: transparent; color: #C46B38; min-height: 48px; padding: 8px 24px; border-radius: 12px; border: 1.5px solid #C46B38; font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; } .ds-btn-outline:active { opacity: 0.85; }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat tonal content card on warm parchment.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Umidade do Solo</h3><p class=\"ds-card-value\">68%</p><span class=\"ds-card-status\">Faixa Ideal</span></div>",
+      "css": ".ds-card { background-color: #FFFBF5; border: 1px solid #D6C3A5; border-radius: 20px; padding: 16px; box-sizing: border-box; } .ds-card-title { margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #6B5844; } .ds-card-value { margin: 0 0 8px 0; font-size: 28px; font-weight: 700; color: #382719; } .ds-card-status { font-size: 14px; font-weight: 600; color: #4F7A3A; }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Standard form input container with floating label.",
+      "html": "<div class=\"ds-input-group\"><label class=\"ds-label\">Nome da Propriedade</label><input class=\"ds-input\" placeholder=\"Ex: Fazenda Boa Esperança\" /></div>",
+      "css": ".ds-input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; box-sizing: border-box; } .ds-label { font-size: 14px; font-weight: 500; color: #382719; } .ds-input { min-height: 48px; padding: 8px 16px; border-radius: 12px; border: 1.5px solid #D6C3A5; background-color: #FFFBF5; color: #382719; font-size: 16px; outline: none; box-sizing: border-box; } .ds-input:focus { border-color: #C46B38; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Selectable pill filter button.",
+      "html": "<div class=\"ds-chip-group\"><button class=\"ds-chip ds-chip-active\">Todos</button><button class=\"ds-chip\">Alertas (2)</button></div>",
+      "css": ".ds-chip-group { display: flex; gap: 8px; flex-wrap: wrap; } .ds-chip { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1.5px solid #D6C3A5; background-color: #FFFBF5; color: #382719; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; } .ds-chip-active { background-color: #C46B38; border-color: #C46B38; color: #FFFFFF; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "custom",
+      "refersTo": "badge",
+      "description": "Dual-signal device status indicator combining icon and text.",
+      "html": "<div class=\"ds-badge ds-badge-online\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 512 512\" fill=\"currentColor\"><path d=\"M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208 208-93.31 208-208S370.69 48 256 48zm108.25 138.29l-134.4 160a16 16 0 01-12 5.71h-.27a16 16 0 01-11.89-5.3l-57.6-64a16 16 0 1123.78-21.4l45.29 50.32 122.59-145.91a16 16 0 0124.5 20.58z\"/></svg><span>Online</span></div>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; } .ds-badge-online { color: #4F7A3A; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Ledger",
+    "overview": "AgroConnect's visual identity draws inspiration from a sturdy, well-used agricultural field notebook. Built primarily for small agricultural producers operating outdoors under direct sunlight and variable weather, the interface eschews cold neon palettes, artificial gradients, and fragile micro-interactions. In their place, it presents a grounded, tactile atmosphere defined by warm earth tones, generous spacing, and deep-contrast typographic clarity.",
+    "keyCharacteristics": [
+      "Warm Agrarian Palette: Earthy terracotta, warm sand gold, and toasted taupe resting on a calm parchment background.",
+      "Tonal Layering with Crisp Borders: Flat-by-default surfaces where depth is established through subtle background shifts and crisp outlines, never muddy drop shadows.",
+      "Field-Ready Ergonomics: Minimum 48×48 dp touch targets designed for comfortable one-handed thumb interaction outdoors.",
+      "Dual-Signal Communication: Every status, alert, and diagnostic indicator pairs semantic color with an unambiguous icon and explicit textual label."
+    ],
+    "rules": [
+      {
+        "name": "The Daylight Contrast Rule",
+        "body": "Primary numbers, headlines, and critical telemetry values must always use Coffee Brown (#382719) or Contrast White (#FFFFFF). Low-contrast grays or faded pastels are forbidden for primary metrics to ensure legibility under midday sunlight.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dual-Signal Rule",
+        "body": "Status indicators and alerts must never rely on color alone. Every warning, error, or online state must pair its semantic color with a dedicated icon and explicit text label.",
+        "section": "colors"
+      },
+      {
+        "name": "The Fixed Ratio Rule",
+        "body": "Font sizes and line heights are strictly mapped to predefined scale tokens. Arbitrary fontSize numbers must not be declared in individual component styles.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "Surfaces are flat at rest. Depth is established purely through tonal layering and crisp 1px borders (#D6C3A5), never heavy or fuzzy drop shadows. Surface cards (#FFFBF5) rest cleanly on the parchment background (#EAD9C1), maintaining a natural, paper-and-binder aesthetic.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do maintain a minimum 48×48 dp touch target for all interactive elements and buttons.",
+      "Do use the parchment background (#EAD9C1) for screens and off-white (#FFFBF5) for cards and inputs.",
+      "Do accompany every status color with a descriptive icon and plain-language text label.",
+      "Do test text readability in outdoor sunlight by verifying high contrast against Coffee Brown (#382719).",
+      "Do use RefreshControl with Terracotta tint (#C46B38) for pull-to-refresh interactions."
+    ],
+    "donts": [
+      "Don't add artificial drop shadows, blurred glows, or skeuomorphic bevels to cards.",
+      "Don't use pure black (#000000) or cold slate grays for text; use Coffee Brown (#382719) and Muted Earth (#6B5844).",
+      "Don't rely on color alone to communicate sensor health, connection dropouts, or critical alerts.",
+      "Don't stack Floating Action Buttons or create complex nested swipe gestures that conflict with Android system Back.",
+      "Don't hardcode raw font sizes or colors in component styles; always reference colors, spacing, and typography tokens."
+    ]
+  }
+}

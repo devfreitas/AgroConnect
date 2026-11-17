@@ -2,8 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { DeviceDetailScreen } from '@/screens/sensors/DeviceDetailScreen';
 import { SensorsScreen } from '@/screens/sensors/SensorsScreen';
-import { colors } from '@/theme';
 import type { SensorsStackParamList } from '@/types/navigation';
+
+import { detailHeader } from '../headerOptions';
 
 const Stack = createNativeStackNavigator<SensorsStackParamList>();
 
@@ -14,13 +15,7 @@ export function SensorsStack() {
       <Stack.Screen
         name="DeviceDetail"
         component={DeviceDetailScreen}
-        options={{
-          headerShown: true,
-          title: 'Dispositivo',
-          headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerShadowVisible: false,
-        }}
+        options={{ ...detailHeader, title: 'Dispositivo' }}
       />
     </Stack.Navigator>
   );

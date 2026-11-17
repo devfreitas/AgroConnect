@@ -42,12 +42,13 @@ export function PropertyForm({ initialValues, submitLabel, onSubmit }: PropertyF
   });
 
   return (
-    <Card style={styles.form}>
+    <Card variant="raised" style={styles.form}>
       <Controller
         control={control}
         name="name"
         render={({ field: { value, onChange, onBlur } }) => (
           <Input
+            icon="home-outline"
             label="Nome da propriedade"
             value={value}
             onChangeText={onChange}
@@ -64,6 +65,7 @@ export function PropertyForm({ initialValues, submitLabel, onSubmit }: PropertyF
         name="city"
         render={({ field: { value, onChange, onBlur } }) => (
           <Input
+            icon="location-outline"
             label="Cidade"
             value={value}
             onChangeText={onChange}
@@ -80,6 +82,7 @@ export function PropertyForm({ initialValues, submitLabel, onSubmit }: PropertyF
         name="state"
         render={({ field: { value, onChange, onBlur } }) => (
           <Input
+            icon="map-outline"
             label="Estado (UF)"
             value={value}
             onChangeText={(text) => onChange(text.toUpperCase())}
@@ -98,6 +101,7 @@ export function PropertyForm({ initialValues, submitLabel, onSubmit }: PropertyF
         name="areaHectares"
         render={({ field: { value, onChange, onBlur } }) => (
           <Input
+            icon="resize-outline"
             label="Área (hectares)"
             value={value}
             onChangeText={onChange}
@@ -115,6 +119,7 @@ export function PropertyForm({ initialValues, submitLabel, onSubmit }: PropertyF
         name="description"
         render={({ field: { value, onChange, onBlur } }) => (
           <Input
+            icon="document-text-outline"
             label="Descrição (opcional)"
             value={value}
             onChangeText={onChange}
@@ -132,7 +137,12 @@ export function PropertyForm({ initialValues, submitLabel, onSubmit }: PropertyF
         </Text>
       ) : null}
 
-      <Button title={submitLabel} onPress={submit} loading={isSubmitting} />
+      <Button
+        title={submitLabel}
+        icon="checkmark-circle-outline"
+        onPress={submit}
+        loading={isSubmitting}
+      />
     </Card>
   );
 }

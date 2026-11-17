@@ -6,7 +6,9 @@ function getCommitHash() {
 
   try {
     const run = (command) =>
-      execSync(command, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+      execSync(command, { stdio: ['ignore', 'pipe', 'ignore'] })
+        .toString()
+        .trim();
 
     const hash = run('git rev-parse --short HEAD');
     const dirty = run('git status --porcelain') !== '';
@@ -23,7 +25,9 @@ module.exports = ({ config }) => ({
     ...config.android,
     // Arquivo do Firebase (necessário para notificações push). Não é versionado:
     // no EAS vem da variável de arquivo GOOGLE_SERVICES_JSON; localmente, de ./google-services.json.
-    ...(process.env.GOOGLE_SERVICES_JSON ? { googleServicesFile: process.env.GOOGLE_SERVICES_JSON } : {}),
+    ...(process.env.GOOGLE_SERVICES_JSON
+      ? { googleServicesFile: process.env.GOOGLE_SERVICES_JSON }
+      : {}),
   },
   extra: {
     ...config.extra,

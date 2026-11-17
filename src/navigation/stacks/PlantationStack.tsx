@@ -3,17 +3,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PlantationScreen } from '@/screens/plantation/PlantationScreen';
 import { PropertyDetailScreen } from '@/screens/plantation/PropertyDetailScreen';
 import { PropertyFormScreen } from '@/screens/plantation/PropertyFormScreen';
-import { colors } from '@/theme';
 import type { PlantationStackParamList } from '@/types/navigation';
 
-const Stack = createNativeStackNavigator<PlantationStackParamList>();
+import { detailHeader } from '../headerOptions';
 
-const nativeHeader = {
-  headerShown: true,
-  headerTintColor: colors.primary,
-  headerStyle: { backgroundColor: colors.background },
-  headerShadowVisible: false,
-} as const;
+const Stack = createNativeStackNavigator<PlantationStackParamList>();
 
 export function PlantationStack() {
   return (
@@ -22,13 +16,13 @@ export function PlantationStack() {
       <Stack.Screen
         name="PropertyDetail"
         component={PropertyDetailScreen}
-        options={{ ...nativeHeader, title: 'Propriedade' }}
+        options={{ ...detailHeader, title: 'Propriedade' }}
       />
       <Stack.Screen
         name="PropertyForm"
         component={PropertyFormScreen}
         options={({ route }) => ({
-          ...nativeHeader,
+          ...detailHeader,
           title: route.params?.propertyId ? 'Editar propriedade' : 'Nova propriedade',
         })}
       />

@@ -1,8 +1,5 @@
 export type ReadingType =
-  | 'SOIL_MOISTURE'
-  | 'AIR_TEMPERATURE'
-  | 'AIR_HUMIDITY'
-  | 'LIGHT_ILLUMINANCE';
+  'SOIL_MOISTURE' | 'AIR_TEMPERATURE' | 'AIR_HUMIDITY' | 'LIGHT_ILLUMINANCE';
 
 export type ReadingQuality = 'VALID' | 'OUT_OF_RANGE' | 'SENSOR_ERROR' | 'UNCALIBRATED';
 export type DeviceStatus = 'ONLINE' | 'UNSTABLE' | 'OFFLINE' | 'UNKNOWN';

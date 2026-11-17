@@ -1,8 +1,9 @@
-import { StyleSheet, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { Notice } from '@/components/ui';
 import type { ApiError } from '@/services';
-import { colors, typography } from '@/theme';
+import { colors, spacing, typography } from '@/theme';
 import { formatDateTime } from '@/utils/format';
 
 type DataStatusProps = {
@@ -38,13 +39,17 @@ export function DataStatus({ error, updatedAt, fromCache }: DataStatusProps) {
   if (!when) return null;
 
   return (
-    <Text style={styles.text}>
-      Atualizado em {when}
-      {fromCache ? ' (dados salvos, atualizando...)' : ''}
-    </Text>
+    <View style={styles.row}>
+      <Ionicons name={fromCache ? 'sync' : 'checkmark-done'} size={14} color={colors.secondary} />
+      <Text style={styles.text}>
+        Atualizado em {when}
+        {fromCache ? ' (dados salvos, atualizando...)' : ''}
+      </Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  text: { ...typography.caption, color: colors.textMuted },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2 },
+  text: { ...typography.caption, fontSize: 12, color: colors.textMuted },
 });

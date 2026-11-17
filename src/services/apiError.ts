@@ -89,9 +89,10 @@ export function normalizeError(error: unknown): ApiError {
       const { status, data } = error.response;
       const body = parseBody(data);
       const kind = kindFromStatus(status);
-      // A mensagem do servidor só é exibida em erros 4xx; em 5xx usamos a genérica.
-      const message =
-        status < 500 && body?.message ? body.message : defaultMessages[kind];
+      // A mensagem do servidor só é exibida em erros 4xx; em 5xx usamos a genérica. Exceção: os
+      // erros da IA (AI_UNAVAILABLE etc.) vêm com texto pensado para o usuário.
+      const friendly = status < 500 || body?.code?.startsWith('AI_') === true;
+      const message = friendly && body?.message ? body.message : defaultMessages[kind];
 
       return new ApiError({
         kind,

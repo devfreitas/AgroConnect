@@ -1,22 +1,22 @@
 # AgroConnect: contrato de API esperado pelo app mobile
 
-**Status:** o Backend entregou a API (`https://gs-dotnet-8wmg.onrender.com`) e este documento foi conferido com o código dela. O teste de ponta a ponta no aparelho ainda será feito.
+**Status:** o Backend entregou a API Java (TerraByte, Spring Boot, `https://terrabyte-m1et.onrender.com`) e este documento foi conferido com o código dela: rotas, DTOs, erros e autenticação batem. O teste de ponta a ponta no aparelho ainda será feito.
 
 ## 1. APIs
 
 | API | Responsabilidade | Variável no app |
 |---|---|---|
-| API principal (C#) | Autenticação, CRUD, dispositivos, leituras, histórico, alertas | `EXPO_PUBLIC_API_URL` |
-| Recomendações | Rota `POST /recommendations` da própria API C#. É demonstrativa: gera recomendações a partir dos alertas, sem modelo de IA nem serviço separado | `EXPO_PUBLIC_AI_API_URL` (opcional; padrão: a mesma URL) |
+| API principal (Java, Spring Boot) | Autenticação, CRUD, dispositivos, leituras, histórico, alertas e recomendações | `EXPO_PUBLIC_API_URL` |
+| Recomendações | Rota `POST /recommendations` da própria API principal, que consulta o microsserviço de IA (Spring AI) por baixo, via Eureka e OpenFeign. O app só fala com a API principal | `EXPO_PUBLIC_AI_API_URL` (opcional; padrão: a mesma URL) |
 
 O app nunca acessa banco, broker MQTT nem dispositivo.
 
 ## 2. Convenções
 
 - Prefixo `/api/v1`. JSON.
-- Erros de validação chegam como `400` com `details` (mapa campo → mensagem). Excesso de requisições: `429` (`RATE_LIMITED`).
-- Criações repetidas em até 5 minutos são deduplicadas pelo backend (idempotência).
-- Datas podem vir com 7 casas decimais nos segundos; o app normaliza.
+- Erros de validação chegam como `400` (`VALIDATION_ERROR`) com `details` (mapa campo → mensagem). Excesso de tentativas de login: `429` (`RATE_LIMITED`).
+- Criações idênticas repetidas são deduplicadas pelo backend (idempotência; também aceita o cabeçalho `Idempotency-Key`).
+- O app normaliza datas com muitas casas decimais nos segundos.
 - Datas em ISO 8601 **UTC com sufixo `Z`**. IDs em **UUID** (string).
 - Autenticação do usuário: `Authorization: Bearer <accessToken>`.
 - Paginação nas listas: query `page` (começa em 1) e `size` (padrão 20, máximo 100).
@@ -45,9 +45,9 @@ O app nunca acessa banco, broker MQTT nem dispositivo.
 
 ## 3. Saúde
 
-`GET /health` (sem autenticação) → `200 { "status": "ok" }`. Em ambos os serviços. Usado para "acordar" o Render antes da avaliação.
+`GET /actuator/health` (sem autenticação). Usado para "acordar" o Render antes da avaliação: os três serviços (API, IA e Eureka) hibernam no plano gratuito.
 
-## 4. Autenticação (API C#)
+## 4. Autenticação (API Java)
 
 | Método e rota | Corpo | Resposta |
 |---|---|---|
@@ -107,7 +107,7 @@ Validação: `name`, `city` ≥ 2 caracteres; `state` com 2 letras; `areaHectare
 
 `stage`: `SEEDLING`, `VEGETATIVE`, `MATURATION`, `HARVEST`.
 
-## 7. Dispositivos, leituras e histórico (API C#)
+## 7. Dispositivos, leituras e histórico (API Java)
 
 | Método e rota | Observação |
 |---|---|
@@ -155,7 +155,7 @@ Validação: `name`, `city` ≥ 2 caracteres; `state` com 2 letras; `areaHectare
 
 Períodos sem dados **não geram item** (o app mostra como lacuna).
 
-## 8. Alertas (API C#)
+## 8. Alertas (API Java)
 
 | Método e rota | Resposta |
 |---|---|
@@ -178,7 +178,7 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 
 `severity`: `INFO`, `WARNING`, `CRITICAL`. `status`: `UNREAD`, `READ`, `RESOLVED`.
 
-## 9. Recomendações (rota demonstrativa da API C#)
+## 9. Recomendações (IA generativa, atrás da API principal)
 
 `POST /recommendations` com `{ "deviceId": "uuid" }` → `200` Page de Recommendation.
 
@@ -201,8 +201,10 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 - Sem limite universal de umidade: os limites dependem de cultura, fase e solo (parâmetros a definir pelo time de IoT/IoB).
 - A resposta pode demorar. O app tem timeout de 60 s e indicador de carregamento.
 - Nenhuma recomendação aciona equipamento.
+- Só há recomendação para dispositivos que têm alertas: sem alertas, a resposta é uma página vazia (`items: []`) e o app mostra o estado vazio.
+- O backend guarda o resultado (cache de ~30 min por alerta). Erros próprios da IA: `409 AI_GENERATION_IN_PROGRESS`, `429 AI_BUSY`, `503 AI_UNAVAILABLE` e `AI_NOT_CONFIGURED`, `502 AI_INVALID_RESPONSE`. O app mostra a mensagem em português enviada pelo servidor.
 
-## 9.1 Notificações push (API C#)
+## 9.1 Notificações push (API Java)
 
 | Método e rota | Corpo | Resposta |
 |---|---|---|
@@ -227,12 +229,12 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 ## 11. Pontos a validar nos testes finais
 
 1. Formatos de `Page`, de erro e de AuthResponse.
-2. (Resolvido) Recomendações na API C#, mesmo token.
-3. Quem serve leituras e histórico (proposta: API C#).
+2. (Resolvido) Recomendações na API principal, mesmo token.
+3. (Resolvido) Leituras e histórico: API Java.
 4. Resposta da IA gerada na hora ou pré-calculada.
 5. Umidade do solo: porcentagem calibrada ou escala relativa.
 6. Rotas, payloads e códigos de erro divergentes.
 7. Culturas: existe catálogo (`crops`)? Proposta: `GET /crops` e plantio com `cropId` no lugar de `cropName`.
 8. Recomendação: a IA gera na hora (`POST /recommendations`) ou o app lê a tabela `recommendations` (`GET`)?
 9. Tipo dos IDs: UUID (string) ou inteiro?
-10. Push: quem envia (a API C# ao criar o alerta?) e se haverá `POST /me/push-tokens`.
+10. (Resolvido) Push: `POST /me/push-tokens` existe; falta confirmar o envio real em aparelho.

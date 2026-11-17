@@ -1,8 +1,11 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, type ViewStyle } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, shadows, spacing, typography } from '@/theme';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger';
+import type { IconName } from './icons';
+
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
 
 type ButtonProps = {
   title: string;
@@ -11,37 +14,50 @@ type ButtonProps = {
   loading?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
+  /** Ícone à esquerda do texto. */
+  icon?: IconName;
   accessibilityHint?: string;
   style?: ViewStyle;
 };
 
 const variantStyles: Record<
   ButtonVariant,
-  { background: string; border: string; text: string; spinner: string }
+  { background: string; border: string; text: string; spinner: string; shadow: boolean }
 > = {
   primary: {
     background: colors.primary,
     border: colors.primary,
     text: colors.primaryContrast,
     spinner: colors.primaryContrast,
+    shadow: true,
   },
   secondary: {
     background: colors.accent,
     border: colors.accent,
-    text: colors.text,
-    spinner: colors.text,
+    text: colors.ink,
+    spinner: colors.ink,
+    shadow: false,
   },
   outline: {
     background: 'transparent',
     border: colors.primary,
-    text: colors.primary,
+    text: colors.primaryDark,
     spinner: colors.primary,
+    shadow: false,
   },
   danger: {
-    background: colors.error,
-    border: colors.error,
-    text: colors.primaryContrast,
-    spinner: colors.primaryContrast,
+    background: colors.errorSoft,
+    border: colors.errorSoft,
+    text: colors.error,
+    spinner: colors.error,
+    shadow: false,
+  },
+  ghost: {
+    background: 'transparent',
+    border: 'transparent',
+    text: colors.primaryDark,
+    spinner: colors.primary,
+    shadow: false,
   },
 };
 
@@ -52,6 +68,7 @@ export function Button({
   loading = false,
   disabled = false,
   fullWidth = true,
+  icon,
   accessibilityHint,
   style,
 }: ButtonProps) {
@@ -69,6 +86,7 @@ export function Button({
       style={({ pressed }) => [
         styles.base,
         { backgroundColor: v.background, borderColor: v.border },
+        v.shadow && !isDisabled && shadows.md,
         fullWidth && styles.fullWidth,
         pressed && styles.pressed,
         isDisabled && styles.disabled,
@@ -78,7 +96,10 @@ export function Button({
       {loading ? (
         <ActivityIndicator color={v.spinner} />
       ) : (
-        <Text style={[styles.label, { color: v.text }]}>{title}</Text>
+        <View style={styles.content}>
+          {icon ? <Ionicons name={icon} size={20} color={v.text} /> : null}
+          <Text style={[styles.label, { color: v.text }]}>{title}</Text>
+        </View>
       )}
     </Pressable>
   );
@@ -86,16 +107,17 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: 48,
+    minHeight: 52,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  content: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   fullWidth: { alignSelf: 'stretch' },
-  pressed: { opacity: 0.85 },
+  pressed: { opacity: 0.88, transform: [{ scale: 0.985 }] },
   disabled: { opacity: 0.5 },
-  label: { ...typography.bodyStrong, fontWeight: '700' },
+  label: { ...typography.bodyStrong, fontWeight: '700', letterSpacing: 0.2 },
 });

@@ -16,3 +16,19 @@ export function navigateToAlerts(attemptsLeft = 50): void {
     setTimeout(() => navigateToAlerts(attemptsLeft - 1), 100);
   }
 }
+
+/** Abre uma aba da área logada (usado pelos atalhos do painel inicial). */
+export function openTab(tab: 'PlantationTab' | 'SensorsTab' | 'AnalyticsTab'): void {
+  if (!navigationRef.isReady()) return;
+
+  if (tab === 'PlantationTab') navigationRef.navigate('PlantationTab', { screen: 'Plantation' });
+  else if (tab === 'SensorsTab') navigationRef.navigate('SensorsTab', { screen: 'Sensors' });
+  else navigationRef.navigate('AnalyticsTab', { screen: 'Analytics' });
+}
+
+/** Abre os detalhes de uma propriedade na aba Plantação. */
+export function openProperty(propertyId: string): void {
+  if (navigationRef.isReady()) {
+    navigationRef.navigate('PlantationTab', { screen: 'PropertyDetail', params: { propertyId } });
+  }
+}

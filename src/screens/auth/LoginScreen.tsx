@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { AuthLayout } from '@/components/shared/AuthLayout';
-import { Button, Card, Input, Notice, TextLink } from '@/components/ui';
+import { Button, Input, Notice, TextLink } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { config } from '@/services';
 import { colors, spacing, typography } from '@/theme';
@@ -40,27 +40,25 @@ export function LoginScreen({ navigation }: AuthStackScreenProps<'Login'>) {
   });
 
   return (
-    <AuthLayout title="Entrar" subtitle="Acesse sua conta para acompanhar a plantação.">
+    <AuthLayout>
       {!config.isConfigured ? (
         <Notice
           type="error"
-          message="Este build não tem as URLs das APIs. Gere o app com EXPO_PUBLIC_API_URL e EXPO_PUBLIC_AI_API_URL definidas."
+          message="Este build não tem a URL da API. Gere o app com EXPO_PUBLIC_API_URL definida."
         />
       ) : null}
 
-      {sessionMessage ? (
-        <Card accessibilityRole="alert">
-          <Text style={styles.notice}>{sessionMessage}</Text>
-        </Card>
-      ) : null}
+      {sessionMessage ? <Notice type="info" message={sessionMessage} /> : null}
 
-      <Card style={styles.form}>
+      <View style={styles.form}>
         <Controller
           control={control}
           name="email"
           render={({ field: { value, onChange, onBlur } }) => (
             <Input
+              tone="soft"
               label="E-mail"
+              icon="mail-outline"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -78,7 +76,9 @@ export function LoginScreen({ navigation }: AuthStackScreenProps<'Login'>) {
           name="password"
           render={({ field: { value, onChange, onBlur } }) => (
             <Input
+              tone="soft"
               label="Senha"
+              icon="lock-closed-outline"
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -99,8 +99,8 @@ export function LoginScreen({ navigation }: AuthStackScreenProps<'Login'>) {
           </Text>
         ) : null}
 
-        <Button title="Entrar" onPress={onSubmit} loading={isSubmitting} />
-      </Card>
+        <Button title="Entrar" icon="log-in-outline" onPress={onSubmit} loading={isSubmitting} />
+      </View>
 
       <TextLink
         prefix="Não tem conta?"
@@ -113,6 +113,5 @@ export function LoginScreen({ navigation }: AuthStackScreenProps<'Login'>) {
 
 const styles = StyleSheet.create({
   form: { gap: spacing.md },
-  notice: { ...typography.bodyStrong, color: colors.text },
   error: { ...typography.caption, color: colors.error },
 });

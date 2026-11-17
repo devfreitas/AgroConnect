@@ -1,19 +1,55 @@
-import { DeviceCard } from '@/components/shared/DeviceCard';
+import { StyleSheet, View } from 'react-native';
+
 import { DataStatus } from '@/components/shared/DataStatus';
+import { DeviceCard } from '@/components/shared/DeviceCard';
 import { Screen } from '@/components/shared/Screen';
-import { Card, EmptyState, ErrorState, Loader } from '@/components/ui';
+import { StatTile } from '@/components/shared/StatTile';
+import { Card, EmptyState, ErrorState, SkeletonCards } from '@/components/ui';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { listDevices } from '@/services';
+import { spacing } from '@/theme';
 import type { SensorsStackScreenProps } from '@/types/navigation';
 
 export function SensorsScreen({ navigation }: SensorsStackScreenProps<'Sensors'>) {
-  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(listDevices, [], {
-    cacheKey: 'devices',
-  });
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(
+    listDevices,
+    [],
+    {
+      cacheKey: 'devices',
+    },
+  );
+
+  const online = data?.filter((device) => device.status === 'ONLINE').length ?? 0;
+  const attention =
+    data?.filter((device) => device.status === 'UNSTABLE' || device.status === 'OFFLINE').length ??
+    0;
+
+  const hero = data ? (
+    <View style={styles.kpis}>
+      <StatTile
+        tone="onInk"
+        icon="hardware-chip-outline"
+        value={String(data.length)}
+        label="Dispositivos"
+      />
+      <StatTile
+        tone="onInk"
+        icon="checkmark-circle-outline"
+        value={String(online)}
+        label="Online"
+      />
+      <StatTile
+        tone="onInk"
+        icon="warning-outline"
+        value={String(attention)}
+        label="Instáveis ou offline"
+      />
+    </View>
+  ) : null;
 
   function renderContent() {
     if (loading) {
-      return <Loader message="Carregando dispositivos..." />;
+      return <SkeletonCards count={3} />;
     }
 
     if (!data) {
@@ -30,6 +66,7 @@ export function SensorsScreen({ navigation }: SensorsStackScreenProps<'Sensors'>
       return (
         <Card>
           <EmptyState
+            iconName="hardware-chip-outline"
             title="Nenhum dispositivo encontrado"
             description="Os dispositivos e sensores vinculados aparecerão aqui."
           />
@@ -53,8 +90,10 @@ export function SensorsScreen({ navigation }: SensorsStackScreenProps<'Sensors'>
 
   return (
     <Screen
+      eyebrow="Dispositivos IoT"
       title="Sensores"
-      subtitle="Dispositivos, estado e última leitura."
+      subtitle="Estado de cada dispositivo e suas leituras."
+      hero={hero}
       onRefresh={refresh}
       refreshing={refreshing}
     >
@@ -62,3 +101,7 @@ export function SensorsScreen({ navigation }: SensorsStackScreenProps<'Sensors'>
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  kpis: { flexDirection: 'row', gap: spacing.sm },
+});

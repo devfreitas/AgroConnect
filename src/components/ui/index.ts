@@ -1,9 +1,14 @@
+export { Badge, type BadgeTone } from './Badge';
 export { Button } from './Button';
 export { Card } from './Card';
 export { ChipGroup } from './ChipGroup';
 export { EmptyState } from './EmptyState';
 export { ErrorState } from './ErrorState';
+export { IconBadge } from './IconBadge';
+export { type IconName } from './icons';
 export { Input } from './Input';
 export { Loader } from './Loader';
 export { Notice } from './Notice';
+export { SectionHeader } from './SectionHeader';
+export { Skeleton, SkeletonCards } from './Skeleton';
 export { TextLink } from './TextLink';

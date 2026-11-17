@@ -5,8 +5,8 @@ Gera o APK com o EAS Build e distribui pelo Firebase App Distribution. Somente A
 ## Antes de começar
 
 - Conta Expo e o repositório com o último commit enviado (`git push`).
-- Projeto no Firebase com um app Android cujo **ID do pacote** seja `com.devfreitas.agroconnect` (o mesmo de `android.package` no `app.json`).
-- A API (C#) no ar no Render, com URL https: `https://gs-dotnet-8wmg.onrender.com`.
+- Projeto no Firebase com um app Android cujo **ID do pacote** seja `com.company.agroconnect` (o mesmo de `android.package` no `app.json`).
+- A API Java (TerraByte) no ar no Render, com URL https: `https://terrabyte-m1et.onrender.com`. O Swagger fica em `https://terrabyte-m1et.onrender.com/swagger-ui/index.html`.
 
 > `google-services.json` **não é necessário** para o App Distribution. Ele é necessário apenas para as **notificações push** (seção 6).
 
@@ -25,10 +25,10 @@ O `.env` local não vai para o build na nuvem. Cadastre as URLs no EAS (elas sã
 npx eas-cli@latest login
 
 npx eas-cli@latest env:create --name EXPO_PUBLIC_API_URL \
-  --value https://gs-dotnet-8wmg.onrender.com/api/v1 \
+  --value https://terrabyte-m1et.onrender.com/api/v1 \
   --environment preview --visibility plaintext
 
-# EXPO_PUBLIC_AI_API_URL é opcional: as recomendações saem da mesma API.
+# EXPO_PUBLIC_AI_API_URL é opcional: as recomendações também saem da API principal.
 ```
 
 Nunca cadastre senhas, tokens ou chaves em variáveis `EXPO_PUBLIC_*`: elas ficam embutidas no APK.
@@ -70,7 +70,7 @@ O `ID_DO_APP_NO_FIREBASE` aparece em **Configurações do projeto → Seus apps*
 
 O app já pede permissão e registra o token (`POST /me/push-tokens`). Para a notificação chegar no Android:
 
-1. No Firebase, abra o app Android (`com.devfreitas.agroconnect`) e baixe o `google-services.json`.
+1. No Firebase, abra o app Android (`com.company.agroconnect`) e baixe o `google-services.json`.
 2. Guarde-o como variável de arquivo no EAS (ele não é versionado):
    ```bash
    npx eas-cli@latest env:create --name GOOGLE_SERVICES_JSON --type file \

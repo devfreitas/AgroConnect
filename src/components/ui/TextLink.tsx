@@ -7,9 +7,13 @@ type TextLinkProps = {
   onPress: () => void;
   /** Texto comum antes do link (ex.: "Não tem conta?"). */
   prefix?: string;
+  /** `onInk` para usar sobre áreas escuras. */
+  tone?: 'default' | 'onInk';
 };
 
-export function TextLink({ label, onPress, prefix }: TextLinkProps) {
+export function TextLink({ label, onPress, prefix, tone = 'default' }: TextLinkProps) {
+  const onInk = tone === 'onInk';
+
   return (
     <Pressable
       onPress={onPress}
@@ -17,9 +21,9 @@ export function TextLink({ label, onPress, prefix }: TextLinkProps) {
       accessibilityLabel={prefix ? `${prefix} ${label}` : label}
       style={styles.container}
     >
-      <Text style={styles.text}>
+      <Text style={[styles.text, onInk && styles.textOnInk]}>
         {prefix ? `${prefix} ` : ''}
-        <Text style={styles.link}>{label}</Text>
+        <Text style={[styles.link, onInk && styles.linkOnInk]}>{label}</Text>
       </Text>
     </Pressable>
   );
@@ -33,5 +37,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   text: { ...typography.body, color: colors.text, textAlign: 'center' },
-  link: { ...typography.bodyStrong, color: colors.primary, textDecorationLine: 'underline' },
+  textOnInk: { color: colors.onInkMuted },
+  link: { ...typography.bodyStrong, color: colors.primaryDark, textDecorationLine: 'underline' },
+  linkOnInk: { color: colors.accent },
 });

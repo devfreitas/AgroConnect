@@ -1,9 +1,11 @@
 import { useCallback, useState } from 'react';
-import { Alert, StyleSheet, Text } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { DataStatus } from '@/components/shared/DataStatus';
+import { InfoRow } from '@/components/shared/InfoRow';
 import { Screen } from '@/components/shared/Screen';
-import { Button, Card, ErrorState, Loader, Notice } from '@/components/ui';
+import { StatTile } from '@/components/shared/StatTile';
+import { Button, Card, ErrorState, Notice, SkeletonCards } from '@/components/ui';
 import { useAutoDismiss } from '@/hooks/useAutoDismiss';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { deleteProperty, getErrorMessage, getProperty } from '@/services';
@@ -25,7 +27,10 @@ export function PropertyDetailScreen({
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const dismissNotice = useCallback(() => navigation.setParams({ notice: undefined }), [navigation]);
+  const dismissNotice = useCallback(
+    () => navigation.setParams({ notice: undefined }),
+    [navigation],
+  );
   useAutoDismiss(notice, dismissNotice);
 
   function confirmDelete() {
@@ -55,7 +60,7 @@ export function PropertyDetailScreen({
   if (loading) {
     return (
       <Screen title="Propriedade" safeTop={false}>
-        <Loader message="Carregando propriedade..." />
+        <SkeletonCards count={2} />
       </Screen>
     );
   }
@@ -74,39 +79,50 @@ export function PropertyDetailScreen({
 
   return (
     <Screen
+      eyebrow="Propriedade"
       title={data.name}
       subtitle={`${data.city}, ${data.state}`}
       safeTop={false}
       onRefresh={refresh}
       refreshing={refreshing}
+      hero={
+        <View style={styles.kpis}>
+          <StatTile
+            tone="onInk"
+            icon="resize-outline"
+            value={formatHectares(data.areaHectares)}
+            label="Área"
+          />
+          <StatTile tone="onInk" icon="location-outline" value={data.state} label={data.city} />
+        </View>
+      }
     >
       {notice ? <Notice type="success" message={notice} /> : null}
       <DataStatus error={error} updatedAt={updatedAt} fromCache={fromCache} />
 
       <Card style={styles.card}>
-        <Text style={styles.label}>Área</Text>
-        <Text style={styles.value}>{formatHectares(data.areaHectares)}</Text>
+        <Text style={styles.heading}>Sobre a propriedade</Text>
+        <Text style={styles.description}>{data.description ?? 'Sem descrição.'}</Text>
+      </Card>
 
-        <Text style={styles.label}>Descrição</Text>
-        <Text style={styles.value}>{data.description ?? 'Sem descrição.'}</Text>
-
-        <Text style={styles.label}>Cadastrada em</Text>
-        <Text style={styles.value}>{formatDate(data.createdAt)}</Text>
-
-        <Text style={styles.label}>Atualizada em</Text>
-        <Text style={styles.value}>{formatDate(data.updatedAt)}</Text>
+      <Card style={styles.card}>
+        <InfoRow icon="calendar-outline" label="Cadastrada em" value={formatDate(data.createdAt)} />
+        <View style={styles.divider} />
+        <InfoRow icon="refresh-outline" label="Atualizada em" value={formatDate(data.updatedAt)} />
       </Card>
 
       {deleteError ? <Notice type="error" message={deleteError} /> : null}
 
       <Button
         title="Editar propriedade"
+        icon="create-outline"
         onPress={() => navigation.navigate('PropertyForm', { propertyId })}
         variant="outline"
         disabled={deleting}
       />
       <Button
         title="Excluir propriedade"
+        icon="trash-outline"
         onPress={confirmDelete}
         variant="danger"
         loading={deleting}
@@ -116,7 +132,9 @@ export function PropertyDetailScreen({
 }
 
 const styles = StyleSheet.create({
+  kpis: { flexDirection: 'row', gap: spacing.sm },
   card: { gap: spacing.xs },
-  label: { ...typography.label, color: colors.textMuted, marginTop: spacing.sm },
-  value: { ...typography.bodyStrong, color: colors.text },
+  heading: { ...typography.subheading, color: colors.text },
+  description: { ...typography.body, color: colors.text },
+  divider: { height: 1, backgroundColor: colors.border, marginLeft: 56 },
 });

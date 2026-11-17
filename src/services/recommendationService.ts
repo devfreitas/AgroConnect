@@ -3,7 +3,7 @@ import type { Recommendation } from '@/types/domain';
 
 import { aiApi } from './api';
 
-/** Pede à API de IA as recomendações para um dispositivo. Pode demorar (timeout de 60 s). */
+/** Pede as recomendações (IA generativa, por trás da API principal). Pode demorar (timeout de 60 s). */
 export async function requestRecommendations(
   deviceId: string,
   signal?: AbortSignal,

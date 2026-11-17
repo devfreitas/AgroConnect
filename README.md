@@ -213,7 +213,7 @@ Link do YouTube:
 
 ## Link Convite App Distribution
 
-Link do convite do Firebase App Distribution: 
+Link do convite do Firebase App Distribution: https://appdistribution.firebase.dev/i/464a45222136ffd5
 
 ## Autores
 

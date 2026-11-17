@@ -209,7 +209,7 @@ A IA **dentro do produto** é outra coisa: as recomendações exibidas ao produt
 
 ## Link Demonstração
 
-Link do YouTube:
+Link do YouTube: https://youtube.com/shorts/RcssZ9Jsf8Y
 
 ## Link Convite App Distribution
 

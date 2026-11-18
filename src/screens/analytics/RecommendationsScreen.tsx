@@ -15,11 +15,25 @@ import {
   Skeleton,
   SkeletonCards,
 } from '@/components/ui';
+import { useElapsedSeconds } from '@/hooks/useElapsedSeconds';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { getErrorMessage, listDevices, requestRecommendations } from '@/services';
 import { colors, radius, spacing, typography, withAlpha } from '@/theme';
 import type { Recommendation } from '@/types/domain';
 import { SEVERITY_RANK } from '@/utils/severity';
+
+/** Depois de alguns segundos, explica por que demora (os serviços gratuitos hibernam). */
+function getWaitingMessage(seconds: number): string {
+  if (seconds < 8) {
+    return 'Analisando as leituras. Isso pode levar alguns segundos...';
+  }
+
+  if (seconds < 25) {
+    return 'A IA ainda está trabalhando. Na primeira análise do dia ela pode demorar mais, porque o serviço precisa acordar.';
+  }
+
+  return 'Quase lá. O serviço de IA estava dormindo e pode levar até 1 minuto. Mantenha esta tela aberta.';
+}
 
 export function RecommendationsScreen() {
   const { data: devices, error, loading, reload } = useRemoteData(listDevices);
@@ -28,6 +42,7 @@ export function RecommendationsScreen() {
   const [results, setResults] = useState<Recommendation[] | null>(null);
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
+  const waitingMessage = getWaitingMessage(useElapsedSeconds(generating));
 
   async function generate(id: string) {
     setGenerating(true);
@@ -119,14 +134,12 @@ export function RecommendationsScreen() {
             style={styles.generating}
             accessible
             accessibilityRole="progressbar"
-            accessibilityLabel="Analisando as leituras. Isso pode levar alguns segundos."
+            accessibilityLabel={waitingMessage}
           >
             <Skeleton height={14} width="55%" />
             <Skeleton height={12} width="90%" />
             <Skeleton height={12} width="75%" />
-            <Text style={styles.generatingText}>
-              Analisando as leituras. Isso pode levar alguns segundos...
-            </Text>
+            <Text style={styles.generatingText}>{waitingMessage}</Text>
           </View>
         ) : null}
         {generateError ? <Notice type="error" message={generateError} /> : null}

@@ -22,11 +22,8 @@ import { ALERT_STATUS_LABELS, SEVERITY_INFO, SEVERITY_RANK, SEVERITY_SOFT } from
 type Filter = 'all' | 'unread';
 
 export function AlertsScreen() {
-  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh } = useRemoteData(
-    (signal) => listAlerts(undefined, signal),
-    [],
-    { cacheKey: 'alerts' },
-  );
+  const { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh, mutate } =
+    useRemoteData((signal) => listAlerts(undefined, signal), [], { cacheKey: 'alerts' });
 
   const [markingId, setMarkingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -37,7 +34,9 @@ export function AlertsScreen() {
     setActionError(null);
 
     try {
-      await markAlertAsRead(id);
+      const updated = await markAlertAsRead(id);
+      // Atualiza a tela na hora, com a resposta da API; depois confirma buscando a lista de novo.
+      mutate((alerts) => alerts.map((alert) => (alert.id === updated.id ? updated : alert)));
       refresh();
     } catch (caught) {
       setActionError(getErrorMessage(caught));

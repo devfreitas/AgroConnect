@@ -1,6 +1,6 @@
 # AgroConnect: contrato de API esperado pelo app mobile
 
-**Status:** o Backend entregou a API Java ( Spring Boot, `https://terrabyte-m1et.onrender.com`) e este documento foi conferido com o código dela: rotas, DTOs, erros e autenticação batem. O teste de ponta a ponta no aparelho ainda será feito.
+**Status:** o Backend entregou a API Java (TerraByte, Spring Boot, `https://terrabyte-m1et.onrender.com`) e este documento foi conferido com o código dela: rotas, DTOs, erros e autenticação batem. O teste de ponta a ponta no aparelho ainda será feito.
 
 ## 1. APIs
 
@@ -225,3 +225,16 @@ Períodos sem dados **não geram item** (o app mostra como lacuna).
 - Toda resposta com leituras deve trazer `simulatedData: true`, e o app exibe um aviso de dados de demonstração.
 - Cenários cadastrados: dispositivos `ESP32-001` e `ESP32-002`, dispositivo offline, sensor com falha (`SENSOR_ERROR`), leitura não calibrada (`UNCALIBRATED`) e intervalo sem leituras. O app trata cada um como estado de interface.
 - Fora do app por ora: refresh de token, recuperação de senha, atualização e exclusão de talhões e plantios, `ai_interactions` e `weather_history`.
+
+## 11. Pontos a validar nos testes finais
+
+1. Formatos de `Page`, de erro e de AuthResponse.
+2. (Resolvido) Recomendações na API principal, mesmo token.
+3. (Resolvido) Leituras e histórico: API Java.
+4. Resposta da IA gerada na hora ou pré-calculada.
+5. Umidade do solo: porcentagem calibrada ou escala relativa.
+6. Rotas, payloads e códigos de erro divergentes.
+7. Culturas: existe catálogo (`crops`)? Proposta: `GET /crops` e plantio com `cropId` no lugar de `cropName`.
+8. Recomendação: a IA gera na hora (`POST /recommendations`) ou o app lê a tabela `recommendations` (`GET`)?
+9. Tipo dos IDs: UUID (string) ou inteiro?
+10. (Resolvido) Push: `POST /me/push-tokens` existe; falta confirmar o envio real em aparelho.

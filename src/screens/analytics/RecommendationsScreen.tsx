@@ -136,7 +136,7 @@ export function RecommendationsScreen() {
             <EmptyState
               iconName="checkmark-circle-outline"
               title="Nenhuma recomendação no momento"
-              description="As condições atuais não pedem nenhuma atenção especial."
+              description="A IA analisa os alertas ativos do dispositivo que tenham leituras válidas. Este dispositivo não tem nenhum no momento."
             />
           </Card>
         ) : null}

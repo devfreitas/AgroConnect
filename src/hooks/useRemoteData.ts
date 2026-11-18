@@ -19,6 +19,8 @@ export type RemoteData<T> = {
   reload: () => void;
   /** Atualiza mantendo os dados na tela (puxar para atualizar). */
   refresh: () => void;
+  /** Altera os dados já exibidos (e o cache) sem esperar a rede, ex.: após marcar um alerta como lido. */
+  mutate: (update: (current: T) => T) => void;
 };
 
 type Options = {
@@ -130,5 +132,18 @@ export function useRemoteData<T>(
     void load('refresh');
   }, [load]);
 
-  return { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh };
+  const mutate = useCallback(
+    (update: (current: T) => T) => {
+      setData((current) => {
+        if (current === null) return current;
+
+        const next = update(current);
+        if (cacheKey) void writeCache(cacheKey, next);
+        return next;
+      });
+    },
+    [cacheKey],
+  );
+
+  return { data, error, loading, refreshing, updatedAt, fromCache, reload, refresh, mutate };
 }

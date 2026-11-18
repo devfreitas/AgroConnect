@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-  Cria dados de demonstração na conta indicada, usando a API do Render.
+  Cria dados de demonstração (fictícios) na conta indicada, usando a API do TerraByte.
 
 .DESCRIPTION
   Entra com e-mail e senha de uma conta que já existe (por exemplo, a criada pelo cadastro do app) e

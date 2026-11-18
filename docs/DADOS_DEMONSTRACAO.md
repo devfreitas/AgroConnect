@@ -4,7 +4,7 @@ O app não tem dados fictícios dentro dele. Tudo vem da API, que lê do banco. 
 
 Uma conta nova (criada pelo cadastro do app) começa **vazia**: sem propriedades, dispositivos, leituras ou alertas. Há dois caminhos para ter dados.
 
-## 1: script (recomendado)
+## Caminho 1: script (recomendado)
 
 O script `scripts/popular-dados-demo.ps1` entra na conta indicada e cadastra os dados pelas rotas da própria API (não mexe no banco direto):
 
@@ -23,3 +23,7 @@ Ele pede a senha da conta. A primeira chamada pode levar cerca de 1 minuto (o Re
 Os horários são relativos a "agora". O status do dispositivo é calculado pela última comunicação: online até 5 minutos, instável até 30, depois offline. Por isso, **rode o script pouco antes de apresentar**. Para renovar, rode de novo: ele cria um novo conjunto, com códigos de dispositivo novos. As propriedades antigas podem ser excluídas pelo app.
 
 Depois de rodar, gere recomendações em Análises > Recomendações: o backend só gera recomendação para dispositivos que têm alertas, e a IA pode levar alguns segundos.
+
+## Caminho 2: conta de demonstração criada pelo backend
+
+O backend Java tem um modo de provisionamento: com o perfil `bootstrap` e as variáveis `DEMO_USER_EMAIL`, `DEMO_USER_PASSWORD` e `DEMO_DATA_ENABLED=true`, ele cria a conta de demonstração com os mesmos dados acima (dispositivos `ESP32-001` e `ESP32-002`). Quem faz isso é o time de back-end, no Render, e depois deve retirar o perfil e as senhas de provisionamento. Os horários também são relativos ao momento em que o seed roda.
